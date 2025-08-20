@@ -1,3 +1,5 @@
+import { screenToWorldX, screenToWorldY, worldToScreenX, worldToScreenY, viewOffsetX, viewOffsetY, viewScale } from './camera.js';
+
 /*======================================*/
 /**
  * Dibuja una cuadrícula que cubre el área donde hay árboles.
@@ -6,6 +8,8 @@
  * @param {number} stepY - separación entre líneas horizontales (px).
  * @param {number} padding - margen extra alrededor del área (px).
  */
+
+// treballa amb world coordinates
 export function drawGridForForest(forest, stepX = 150, stepY = 150, padding = 20) {
   if (!forest || !forest.arboles || forest.arboles.length === 0) return;
 
@@ -58,12 +62,32 @@ export function drawGridForForest(forest, stepX = 150, stepY = 150, padding = 20
     line(startX, y, endX, y);
   }
 
-  // (Opcional) ejes/etiquetas discretas cada 300 px
-  
+  // (Opcional) ejes/etiquetas discretas cada 300 px    <---- SURTEN AL REVES PER EL SCALE -1 A LA Y
+  // Arrays para almacenar etiquetas
+  const etiquetasX = [];
+  const etiquetasY = [];
+
+  for (let wx = startX; wx <= endX; wx += 300) {
+    const sx = worldToScreenX(wx) + 2;
+    const sy = worldToScreenY(startY) + 12;
+    etiquetasX.push({ sx, sy, valor: wx });
+
+  }
+  for (let wy = startY; wy <= endY; wy += 300) {
+    const sx = worldToScreenX(startX) + 3;
+    const sy = worldToScreenY(wy) - 3;
+    etiquetasY.push({ sx, sy, valor: wy });
+  }
+  push();
+  resetMatrix();
   fill(0, 100); noStroke(); textSize(10);
-  for (let x = startX; x <= endX; x += 300) text(x, x + 2, startY + 12);
-  for (let y = startY; y <= endY; y += 300) text(y, startX + 3, y - 3);
-  
+  for (const e of etiquetasX) {
+    text(e.valor, e.sx, e.sy);
+  }
+  for (const e of etiquetasY) {
+    text(e.valor, e.sx, e.sy);
+  }
+  pop();
 
   pop();
 }
@@ -84,26 +108,35 @@ function colorToHex(c) {
 }
 
 function treeBounds(t) {
+  // world coordinates
   const d = t.dna;
   const halfW = Math.max(d.crownWidth * 0.6, d.trunkWidth * 0.5);
   const left   = t.x - halfW;
   const right  = t.x + halfW;
-  const top    = t.y - d.trunkHeight - d.crownHeight;
+  const top    = t.y + d.trunkHeight + d.crownHeight;  // world coordinates
   const bottom = t.y;
   return { left, right, top, bottom };
 }
 
-function treeHit(t, mx, my) {
+function treeHit(t, wx, wy) {
+  // world coordinates
   const b = treeBounds(t);
-  return mx >= b.left && mx <= b.right && my >= b.top && my <= b.bottom;
+  return wx >= b.left && wx <= b.right && wy <= b.top && wy >= b.bottom;
 }
 
 export function findTreeUnderMouse(forest) {
-  if (!forest || !forest.arboles) return null;
+  if (!forest || !forest.arboles) { console.log("No hay árboles en el bosque."); return null;}
+  // Convertir mouseX, mouseY (pantalla) a coordenadas del mundo
+  const mx = screenToWorldX(mouseX);
+  const my = screenToWorldY(mouseY);
+  //console.log(`Buscando árbol bajo el ratón en mouse (${mouseX}, ${mouseY}) world (${mx}, ${my})`);
   // Recorremos al revés para priorizar árboles “encima” si los dibujas en orden
   for (let i = forest.arboles.length - 1; i >= 0; i--) {
     const t = forest.arboles[i];
-    if (treeHit(t, mouseX, mouseY)) return t;
+    if (treeHit(t, mx, my)) { 
+      //console.log(`Árbol encontrado: ${t.dna.crownShape} en (${t.x}, ${t.y})`);
+      return t;
+    }
   }
   return null;
 }
@@ -124,6 +157,7 @@ export function drawTreeTooltip(t) {
 
   // Medidas del tooltip
   push();
+  resetMatrix(); // <-- Asegura que el tooltip se dibuja en coordenadas de pantalla
   textFont('monospace');
   textSize(12);
   const pad = 8;
@@ -131,14 +165,19 @@ export function drawTreeTooltip(t) {
   for (const line of lines) w = Math.max(w, textWidth(line));
   const h = lines.length * 16; // 12px + interlineado
 
+  // Usa el tamaño real del canvas
+  let canvasW = drawingContext.canvas.width;
+  let canvasH = drawingContext.canvas.height;
+
   // Posición cerca del ratón con “ajuste” para no salir del canvas
   let x = mouseX + 14;
   let y = mouseY + 14;
-  if (x + w + pad * 2 > width)  x = width  - w - pad * 2;
-  if (y + h + pad * 2 > height) y = height - h - pad * 2;
+  if (x + w + pad * 2 > canvasW)  x = canvasW  - w - pad * 2;
+  if (y + h + pad * 2 > canvasH) y = canvasH - h - pad * 2;
 
   // Fondo y borde
   noStroke();
+  rectMode(CORNER);
   fill(255, 230); // blanco con algo de transparencia
   rect(x, y, w + pad * 2, h + pad * 2, 8);
   stroke(0, 60);
@@ -154,4 +193,17 @@ export function drawTreeTooltip(t) {
     ty += 16;
   }
   pop();
+}
+
+
+export function logCursorPosition() {
+  console.log("---------------------------");
+  //let worldMinX, worldMaxX;
+  //({ worldMinX, worldMaxX } = getWorldXBounds());
+  //console.log(`World bounds: ${worldMinX.toFixed(1)}, ${worldMaxX.toFixed(1)}`);
+  //console.log("World bounds to screen:", worldToScreenX(worldMinX).toFixed(1), worldToScreenX(worldMaxX).toFixed(1));
+  console.log(`Cursor position: (${mouseX.toFixed(1)}, ${mouseY.toFixed(1)})`);
+  console.log(`World position: (${screenToWorldX(mouseX).toFixed(1)}, ${screenToWorldY(mouseY).toFixed(1)})`);
+  console.log(`Camera scale: ${viewScale.toFixed(1)}`);
+  console.log(`Camera offset: (${viewOffsetX.toFixed(1)}, ${viewOffsetY.toFixed(1)})`);
 }

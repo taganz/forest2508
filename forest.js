@@ -8,7 +8,7 @@ import { Tree } from './tree.js';
 import { DNA } from './DNA.js';
 
 const treeDistance = 150;
-const treePosXVariation = 0;
+const treePosXVariation = 0.1;
 
 export class Forest {
     constructor() {
@@ -25,8 +25,7 @@ export class Forest {
     addTreeArea(areaSize = 10) {
         for (let x = -areaSize*treeDistance; x < areaSize*treeDistance; x = x+treeDistance) {
             for (let y = -areaSize*treeDistance; y < areaSize*treeDistance; y = y+treeDistance) {
-                this.addTreeAt(x * Math.random(1-treePosXVariation, 1+treePosXVariation), y* Math.random(1-treePosXVariation, 1+treePosXVariation));
-                //console.log(` tree at (${x}, ${y})`);
+                this.addTreeAt(x + treeDistance * random(-treePosXVariation, +treePosXVariation), y + treeDistance * random(-treePosXVariation, +treePosXVariation));
             }
         }
     }
@@ -109,7 +108,7 @@ export class Forest {
     }
     dibujar() {
         // Ordenar los árboles por Y (más lejos primero)
-        const ordenados = [...this.arboles].sort((a, b) => a.y - b.y);
+        const ordenados = [...this.arboles].sort((a, b) => b.y - a.y);
         for (const t of ordenados) t.draw();
     }
 }

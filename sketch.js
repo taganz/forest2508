@@ -2,13 +2,18 @@
 import { Forest } from './forest.js';
 import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
 import { keyPressed, keyReleased, mouseMoved } from './ui.js';
-
+import { applyCamera, setCamera } from './camera.js';
 let bosque;
 let seedValue = Math.floor(Math.random()*1e9);
 
 function setup() {
-  //createCanvas(900, 600);
-  createCanvas(windowWidth, windowHeight)
+  let c = createCanvas(800, 600);
+  //let c = createCanvas(windowWidth, windowHeight)
+  c.parent('canvas-container');   // per a que surti dins del div
+  c.position(0, document.getElementById('ui').offsetHeight + 18);  // que quedi per sota del botons
+  c.elt.setAttribute('tabindex', '0'); // Permite que el canvas reciba foco
+  c.elt.addEventListener('mouseenter', () => c.elt.focus());
+
   angleMode(RADIANS);
   rectMode(CENTER);
   noLoop();
@@ -38,6 +43,7 @@ function setup() {
 function reiniciar() {
   randomSeed(seedValue);
   noiseSeed(seedValue);
+  setCamera(0.4, width/2, height/2);
   bosque = new Forest();
   //bosque.firstTree(); 
   bosque.addTreeArea(5);
@@ -51,13 +57,14 @@ function reiniciar() {
 
 function draw() {
   clear();
-  translate(width / 2, height / 2);
-  scale(0.4, 0.4);
-  background(248);
-  noStroke();
-  drawGridForForest(bosque, 150, 150, 20); // Dibuja una cuadrícula de fondo para referencia
-  bosque.dibujar();
+  applyCamera();
 
+  background(235);  //248
+  noStroke();
+
+  drawGridForForest(bosque, 150, 150, 20); // Dibuja una cuadrícula de fondo para referencia
+
+  bosque.dibujar();
 
   // Mostrar tooltip si Q está pulsada y el ratón está sobre un árbol
   if (keyIsDown(81) || keyIsDown(113)) { // 81 = 'Q', 113 = 'q'

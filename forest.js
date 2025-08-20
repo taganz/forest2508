@@ -8,7 +8,7 @@ import { Tree } from './tree.js';
 import { DNA } from './DNA.js';
 
 const treeDistance = 150;
-const treePosXVariation = 0.1;
+const treePosXVariation = 0;
 
 export class Forest {
     constructor() {

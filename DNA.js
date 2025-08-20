@@ -10,6 +10,22 @@ const paletaMarron = [
 
 const formas = ['triangulo', 'circulo', 'rombo', 'elipse'];
         
+// parameters for x,y adaptation, that should be done by evolution....
+const cwA1 = 20 + 20 * Math.random();
+const cwA2 = 80 + 80 * Math.random();
+const cwTx = 200 + 100 * Math.random();
+const cwFx = Math.PI/2 * Math.random();
+const cwTy = 200 + 200 * Math.random();
+const cwFy = Math.PI/2 * Math.random();
+
+const chA1 = 20 + 100 * Math.random();
+const chA2 = 20 + 60 * Math.random();
+const chTx = 100 + 200 * Math.random();
+const chFx = Math.PI/2 * Math.random();
+const chTy = 200 + 400 * Math.random();
+const chFy = Math.PI/2 * Math.random();
+
+
 
 /*=========================== DNA ===========================*/
 export class DNA {
@@ -43,14 +59,16 @@ export class DNA {
 
     }
     static dnaPosition(x, y) {            
-        const crownShape = formas[Math.floor( (formas.length) *  Math.abs(Math.sin (x/500 + Math.PI/2)))];   // <--- controlar cas 1
-        const crownWidth = 50; // 28 + 28 + 80 * sin (x/3000 + Math.PI/3) * cos (y/3000 + Math.PI/2);
-        const crownHeight = 80; // 30 + 30 + 120 * sin (x/1000 + 20) * cos (y/1000 + 20);
-        const crownColor = paletaVerdes[Math.floor( (paletaVerdes.length) * Math.abs(Math.sin (x/500 + Math.PI/3)))]; // <--- controlar cas 1
-        const trunkType = Math.random(['linea', 'lineaRamas']);
+        const idx = Math.min(formas.length - 1, Math.floor(formas.length * Math.abs(Math.sin(x/500 + Math.PI/2))));
+        const crownShape = formas[idx];
+        const crownWidth = cwA1 + cwA2 * sin (x/cwTx + cwFx) * cos (y/cwTy + cwFy);
+        const crownHeight = chA1 + chA2 * sin (x/chTx + chFx) * cos (y/chTy + chFy);
+        const idxColor = Math.min(paletaVerdes.length - 1, Math.floor(paletaVerdes.length * Math.abs(Math.sin(x/500 + Math.PI/3))));
+        const crownColor = paletaVerdes[idxColor];
+        const trunkType = random(['linea', 'lineaRamas']);
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);
-        const trunkColor = Math.random(paletaMarron);
+        const trunkColor = random(paletaMarron);
         const spaceNeeded = Math.max(60, crownWidth * 1.2, trunkHeight * 0.9);
         
         return new DNA({

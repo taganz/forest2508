@@ -1,15 +1,15 @@
 /* Bosque genético con controles (p5.js) */
 import { Forest } from './forest.js';
-import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
 import { keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
 import { applyCamera, setCamera } from './camera.js';
-import { screenToWorldX, screenToWorldY } from './camera.js';
+import { draw as p5draw, windowResized, setupCanvas }            from './rendering.js';
 
-let bosque;
+export let bosque;
 let seedValue = Math.floor(Math.random()*1e9);
 
 function setup() {
-  let c = createCanvas(800, 600);
+  let c = setupCanvas();
+
   //let c = createCanvas(windowWidth, windowHeight)
   c.parent('canvas-container');   // per a que surti dins del div
   c.position(0, document.getElementById('ui').offsetHeight + 18);  // que quedi per sota del botons
@@ -20,10 +20,7 @@ function setup() {
   let cnv2 = document.querySelector('canvas');   // cnv es un p5.Element
   cnv2.addEventListener('wheel', handleZoom, { passive: false });
 
-  angleMode(RADIANS);
-  rectMode(CENTER);
-  noLoop();
-
+  
   // UI (simple DOM vanilla, sin p5.dom)
   const $ = sel => document.querySelector(sel);
   $('#seed').value = seedValue;
@@ -49,10 +46,10 @@ function setup() {
 function reiniciar() {
   randomSeed(seedValue);
   noiseSeed(seedValue);
-  setCamera(0.4, width/2, height/2);
+
   bosque = new Forest();
   //bosque.firstTree(); 
-  bosque.addTreeArea(15);
+  bosque.addTreeArea(12);
     
   // Crea exactamente dos hijos (derecha y abajo), tal como pides:
   //bosque.crearHijosPrimeros();
@@ -61,59 +58,12 @@ function reiniciar() {
   redraw();
 }
 
-function draw() {
-  clear();
-  applyCamera();
-
-  background(235);  //248
-  noStroke();
-
-  drawGridForForest(bosque, 150, 150, 20); // Dibuja una cuadrícula de fondo para referencia
-
-  _drawVisibleForest();
-
-  // Mostrar tooltip si Q está pulsada y el ratón está sobre un árbol
-  if (keyIsDown(81) || keyIsDown(113)) { // 81 = 'Q', 113 = 'q'
-    const hovered = findTreeUnderMouse(bosque);
-    if (hovered) {
-      drawTreeTooltip(hovered);
-    }
-  }
-}
-
-function _drawVisibleForest() {
-  const margin = 0.10; // 10% de tolerancia
-
-  // Esquinas del canvas en pantalla
-  const x0 = 0, y0 = 0;
-  const x1 = width, y1 = height;
-
-  // Convierte a coordenadas de mundo
-  let wx0 = screenToWorldX(x0);
-  let wy0 = screenToWorldY(y0);
-  let wx1 = screenToWorldX(x1);
-  let wy1 = screenToWorldY(y1);
-
-  // Calcula el margen extra
-  const dx = Math.abs(wx1 - wx0) * margin;
-  const dy = Math.abs(wy1 - wy0) * margin;
-
-  // Aplica el margen
-  const xmin = Math.min(wx0, wx1) - dx;
-  const xmax = Math.max(wx0, wx1) + dx;
-  const ymin = Math.min(wy0, wy1) - dy;
-  const ymax = Math.max(wy0, wy1) + dy;
-
-  // Llama a bosque.dibujar con los límites
-  bosque.dibujar(xmin, xmax, ymin, ymax);
-}
-
 
 // Bind p5’s globals
 // p5js espera trobar els callbacks en window i ho posem com modul no ho troba
-
 window.setup        = setup;
-window.draw         = draw;
+window.draw         = p5draw;
+window.windowResized  = windowResized;
 //window.redraw       = redraw;
 window.keyPressed   = keyPressed;
 window.keyReleased  = keyReleased;

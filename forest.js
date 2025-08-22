@@ -23,13 +23,25 @@ export class Forest {
         this.arboles.push(new Tree(x, y, dna));
     }
     addTreeArea(areaSize = 10) {
+        let treeIntentados = 0;
         for (let x = -areaSize*treeDistance; x < areaSize*treeDistance; x = x+treeDistance) {
             for (let y = -areaSize*treeDistance; y < areaSize*treeDistance; y = y+treeDistance) {
+                treeIntentados++;
                 this.addTreeAt(x + treeDistance * random(-treePosXVariation, +treePosXVariation), y + treeDistance * random(-treePosXVariation, +treePosXVariation));
             }
         }
+        console.log(`Árboles creados en área: ${this.arboles.length} de intentados ${treeIntentados}`);
+        console.log('Límite bounding box:', this.boundingBox());
     }
   
+    boundingBox() {
+        return {
+            minX:  Math.min(...this.arboles.map(a => a.x)),
+            maxY:  Math.max(...this.arboles.map(a => a.y)),
+            maxX:  Math.max(...this.arboles.map(a => a.x)),
+            minY:  Math.min(...this.arboles.map(a => a.y))
+        };
+    }
     // aquesta a desapareixer...
     crearHijosPrimeros() {
         if (this.arboles.length === 0) { console.log("crearHijosPrimeros length === 0"); return};;

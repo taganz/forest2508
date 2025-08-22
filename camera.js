@@ -89,3 +89,4 @@ export function pan(dx, dy) {
   viewOffsetX += dx;
   viewOffsetY += dy;
 }
+

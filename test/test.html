@@ -26,6 +26,8 @@
   <!-- Este contenedor mostrará el reporte de Mocha -->
   <div id="mocha"></div>
 
+  
+  <script src="https://unpkg.com/sinon@latest/pkg/sinon.js"></script>
   <!-- 2) Bibliotecas: Mocha y Chai desde CDN -->
   <script src="https://cdn.jsdelivr.net/npm/mocha/mocha.min.js"></script>
   <!-- versio  sense moduls-->
@@ -42,6 +44,7 @@
   <!-- 5) Tests -->
   <script src="./dna.test.js" type="module" ></script>
   <script src="./camera.test.js" type="module" ></script>
+  <script src="./input.test.js" type="module" ></script>
   <script>
     // 6) Ejecuta Mocha cuando la página haya cargado
     window.onload = function () {

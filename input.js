@@ -1,23 +1,51 @@
 import { logCursorPosition } from "./util.js";
 import { zoomAt, pan } from './camera.js';
+import { toggleGrid } from "./rendering.js";
+
+export const keysDown = {}
+const panStep = 20;
+
 
 export function keyPressed() {
+  keysDown[keyCode] = true;
+
   if (key === 'q' || key === 'Q') {
     loop();     // empieza a repintar al pulsar Q
   }
   if (key === "1") {    logCursorPosition();  }
   // arrow keys for pan
-  if (keyCode===LEFT_ARROW)  { pan(20,0); redraw();  }
-  if (keyCode===RIGHT_ARROW) { pan(-20,0); redraw(); }
-  if (keyCode===UP_ARROW)    { pan(0,20); redraw();  }
-  if (keyCode===DOWN_ARROW)  { pan(0,-20); redraw(); }
+  if (keyCode===LEFT_ARROW)  { pan(panStep,0); loop();  }   // loop en comptes de redraw per a permetre continuous pan
+  if (keyCode===RIGHT_ARROW) { pan(-panStep,0); loop(); }
+  if (keyCode===UP_ARROW)    { pan(0,panStep); loop();  }
+  if (keyCode===DOWN_ARROW)  { pan(0,-panStep); loop(); }
+  if (key === 'g' || key === 'G') { toggleGrid(); redraw(); }
+  //if(e.key==='s') { saveCanvas('bosque_genetico','png'); }
+   //if(e.key==='r') { reiniciar(); }
+   
 }
 
 export function keyReleased() {
+  //keysDown[keyCode] = false;
+
   if (key === 'q' || key === 'Q') { 
     noLoop();                                  // vuelve a parar al soltar Q
     redraw();                                  // un último repintado
   }
+
+  // pot ser que si s'aixequen dues tecles al mateix temps nomes es cridi la funcio un cop?
+  // revisem que estan totes be
+  if (!keyIsDown(LEFT_ARROW)) {keysDown[LEFT_ARROW] = false;};
+  if (!keyIsDown(RIGHT_ARROW)) {keysDown[RIGHT_ARROW] = false};
+  if (!keyIsDown(UP_ARROW)) {keysDown[UP_ARROW] = false};
+  if (!keyIsDown(DOWN_ARROW)) {keysDown[DOWN_ARROW] = false};
+
+  let someKeyStillPressed = false;
+  [LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW].every(code => someKeyStillPressed = someKeyStillPressed  || keysDown[code]);
+  // --> OJO es desactiva el pan encara que hi hagi encara una tecla apretada
+  if (!someKeyStillPressed) {
+          noLoop(); 
+          redraw();
+  }   // loop en comptes de redraw per a permetre continuous pan
 }
 
 export function mouseMoved() {
@@ -46,4 +74,12 @@ export function handleZoom(event) {
   
   // 5) signal we handled it
   return false;
+}
+
+export function handleContinuousPan() {
+  if (keysDown[LEFT_ARROW])  pan(panStep, 0);
+  if (keysDown[RIGHT_ARROW]) pan(-panStep, 0);
+  if (keysDown[UP_ARROW])    pan(0, panStep);
+  if (keysDown[DOWN_ARROW])  pan(0, -panStep)    
+
 }

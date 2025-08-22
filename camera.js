@@ -5,7 +5,7 @@ camera.js
 Este módulo gestiona la "cámara" virtual para zoom y pan
 
 Uso
-- Inicializar con setCamera()
+- Inicializar con setCameraParameters()
 - En draw() usar applyCamera()  para aplicar la transformacion
 
 Util
@@ -36,16 +36,24 @@ export function resetCamera() {
 
 }
 
-export function setCamera(scale, offsetX, offsetY) {
+export function setCameraParameters(scale, offsetX, offsetY) {
   viewScale = scale;
   viewOffsetX = offsetX;
   viewOffsetY = offsetY;
 } 
 
+export function getCameraParameters() {
+  return {
+    viewScale: viewScale,
+    viewOffsetX: viewOffsetX,
+    viewOffsetY: viewOffsetY
+  };
+}
 
 export function applyCamera() {
   translate(viewOffsetX, viewOffsetY);
   scale(viewScale, - viewScale);
+  
 }
 
 

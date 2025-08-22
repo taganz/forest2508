@@ -1,8 +1,9 @@
 
-import { setCamera, applyCamera, screenToWorldX, screenToWorldY } from "./camera.js";
-import { bosque } from "./main.js";
+import { setCameraParameters, getCameraParameters, applyCamera, screenToWorldX, screenToWorldY } from "./camera.js";
+import { bosque, debugShowBoundingBox } from "./main.js";
 import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
 import {handleContinuousPan} from "./input.js";
+
 
 export let showGrid = false; 
 export function toggleGrid() {
@@ -11,7 +12,7 @@ export function toggleGrid() {
 
 export function setupCanvas() {
   angleMode(RADIANS);
-  rectMode(CENTER);
+  rectMode(CORNER); 
   frameRate(10);
   noLoop();
   let c = _createCanvasAdaptedToWindow()
@@ -19,26 +20,18 @@ export function setupCanvas() {
 }
 
 export function draw() {
-  clear();
-  applyCamera();
 
+  clear();
   background(235);  //248
   noStroke();
 
-  if (showGrid) {
-    drawGridForForest(bosque, 150, 150, 20); // Dibuja la cuadrícula solo si showGrid es true
-  }
+  applyCamera();
 
+  _showGridIfNeeded();
 
   _drawVisibleForest();
 
-  // Mostrar tooltip si Q está pulsada y el ratón está sobre un árbol
-  if (keyIsDown(81) || keyIsDown(113)) { // 81 = 'Q', 113 = 'q'
-    const hovered = findTreeUnderMouse(bosque);
-    if (hovered) {
-      drawTreeTooltip(hovered);
-    }
-  }
+  _showTooltipIfQPressed();
 
   handleContinuousPan();
 
@@ -49,7 +42,7 @@ function _createCanvasAdaptedToWindow() {
   let canvasHeight = min(600, windowHeight);
   console.log(`canvas created: ${canvasWidth}x${canvasHeight}`);
   let cnv = createCanvas(canvasWidth, canvasHeight);
-  setCamera(0.4, width/2, height/2);
+  setCameraParameters(0.4, width/2, height/2);
   return cnv;
 }
 
@@ -58,7 +51,7 @@ export function windowResized() {
   let canvasHeight = min(600, windowHeight);
   console.log(`canvas resized: ${canvasWidth}x${canvasHeight}`);
   resizeCanvas(canvasWidth, canvasHeight);
-  setCamera(0.4, width/2, height/2);
+  setCameraParameters(0.4, width/2, height/2);
 }
 
 function _drawVisibleForest() {
@@ -69,7 +62,8 @@ function _drawVisibleForest() {
   let wy0 = screenToWorldY(0);
   let wx1 = screenToWorldX(width);
   let wy1 = screenToWorldY(height);
-  console.log(`World screen corners: (${wx0.toFixed(1)}, ${wy0.toFixed(1)}) to (${wx1.toFixed(1)}, ${wy1.toFixed(1)})`);
+  if (debugShowBoundingBox) console.log('camara: ', getCameraParameters());
+  if (debugShowBoundingBox) console.log(`World screen corners: (${wx0.toFixed(1)}, ${wy0.toFixed(1)}) to (${wx1.toFixed(1)}, ${wy1.toFixed(1)})`);
 
   // Calcula el margen extra
   const dx = Math.abs(wx1 - wx0) * margin;
@@ -81,9 +75,24 @@ function _drawVisibleForest() {
   const ymin = Math.min(wy0, wy1) - dy;
   const ymax = Math.max(wy0, wy1) + dy;
 
-  console.log(`World to draw : (${xmin.toFixed(1)}, ${ymax.toFixed(1)} ) to (${xmax.toFixed(1)}, ${ymin.toFixed(1)})`);
+  if (debugShowBoundingBox)   console.log(`World to draw : (${xmin.toFixed(1)}, ${ymax.toFixed(1)} ) to (${xmax.toFixed(1)}, ${ymin.toFixed(1)})`);
 
   // Llama a bosque.dibujar con los límites1
-  bosque.dibujar(xmin, xmax, ymin, ymax);
+  //bosque.draw(xmin, xmax, ymin, ymax);      <---- NO EM FUNCIONA OPTIMITZAR PER A QUE ES PINTI NOMES EL QUE HI HA EN PANTALLA, HO PINTO TOT, VA RAPID...
+  bosque.draw();
 }
 
+function _showTooltipIfQPressed () {
+  if (keyIsDown(81) || keyIsDown(113)) { // 81 = 'Q', 113 = 'q'
+    const hovered = findTreeUnderMouse(bosque);
+    if (hovered) {
+      drawTreeTooltip(hovered);
+    }
+  }
+}
+
+function _showGridIfNeeded() {
+  if (showGrid) {
+    drawGridForForest(bosque, 150, 150, 20);
+  }
+}

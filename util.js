@@ -11,27 +11,16 @@ import { screenToWorldX, screenToWorldY, worldToScreenX, worldToScreenY, viewOff
 
 // treballa amb world coordinates
 export function drawGridForForest(forest, stepX = 150, stepY = 150, padding = 20) {
+
   if (!forest || !forest.arboles || forest.arboles.length === 0) return;
 
-  // 1) Calculamos el bounding box de TODOS los árboles (incluye copa y tronco)
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
 
-  for (const t of forest.arboles) {
-    const d = t.dna;
 
-    // Anchura efectiva: copa manda (y un poco de tronco)
-    const halfWidth = Math.max(d.crownWidth * 0.6, d.trunkWidth * 0.5);
+  let minX = screenToWorldX(0);
+  let maxX = screenToWorldX(width);
+  let minY = screenToWorldY(height);
+  let maxY = screenToWorldY(0);
 
-    const left   = t.x - halfWidth;
-    const right  = t.x + halfWidth;
-    const top    = t.y - d.trunkHeight - d.crownHeight; // vértice superior de la copa
-    const bottom = t.y;                                  // base del tronco
-
-    minX = Math.min(minX, left);
-    maxX = Math.max(maxX, right);
-    minY = Math.min(minY, top);
-    maxY = Math.max(maxY, bottom);
-  }
 
   //console.log(`minX ${minX} maxX ${maxX} minY ${minY} maxY ${maxY} `);
   //console.log(forest);
@@ -69,14 +58,20 @@ export function drawGridForForest(forest, stepX = 150, stepY = 150, padding = 20
 
   for (let wx = startX; wx <= endX; wx += 300) {
     const sx = worldToScreenX(wx) + 2;
-    const sy = worldToScreenY(startY) + 12;
+    //const sy = worldToScreenY(startY) + 12;
+    const sy = height/2;
+    etiquetasX.push({ sx, sy: stepY/2, valor: wx });
     etiquetasX.push({ sx, sy, valor: wx });
+    etiquetasX.push({ sx, sy: height - stepY/2, valor: wx });
 
   }
   for (let wy = startY; wy <= endY; wy += 300) {
-    const sx = worldToScreenX(startX) + 3;
+    //const sx = worldToScreenX(startX) + 3;
+    const sx = width/2;
     const sy = worldToScreenY(wy) - 3;
+    etiquetasY.push({ sx: stepX/2, sy, valor: wy });
     etiquetasY.push({ sx, sy, valor: wy });
+    etiquetasY.push({ sx: width - stepX/2, sy, valor: wy });
   }
   push();
   resetMatrix();

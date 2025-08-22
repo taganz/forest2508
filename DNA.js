@@ -13,9 +13,9 @@ const formas = ['triangulo', 'circulo', 'rombo', 'elipse'];
 // parameters for x,y adaptation, that should be done by evolution....
 const cwA1 = 20 + 20 * Math.random();
 const cwA2 = 80 + 80 * Math.random();
-const cwTx = 200 + 100 * Math.random();
+const cwTx = 200 + 1100 * Math.random();
 const cwFx = Math.PI/2 * Math.random();
-const cwTy = 200 + 200 * Math.random();
+const cwTy = 200 + 1200 * Math.random();
 const cwFy = Math.PI/2 * Math.random();
 
 const chA1 = 20 + 100 * Math.random();

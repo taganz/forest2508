@@ -1,11 +1,18 @@
 /* Bosque genético con controles (p5.js) */
 import { Forest } from './forest.js';
 import { keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
-import { applyCamera, setCamera } from './camera.js';
+import { applyCamera, setCameraParameters } from './camera.js';
 import { draw as p5draw, windowResized, setupCanvas }            from './rendering.js';
 
-export let bosque;
+// --- simulation parameters --------------------
+
+const initialForestSize = 14; // tamaño inicial del bosque como multiplicador de factor de separacion entre arboles (esta en forest de momento)
+export const debugShowBoundingBox = false;
 let seedValue = Math.floor(Math.random()*1e9);
+
+//-------------------------------------------------
+
+export let bosque;
 
 function setup() {
   let c = setupCanvas();
@@ -49,7 +56,7 @@ function reiniciar() {
 
   bosque = new Forest();
   //bosque.firstTree(); 
-  bosque.addTreeArea(12);
+  bosque.addTreeArea(initialForestSize);
     
   // Crea exactamente dos hijos (derecha y abajo), tal como pides:
   //bosque.crearHijosPrimeros();

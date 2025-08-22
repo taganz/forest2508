@@ -6,9 +6,9 @@
 */
 import { Tree } from './tree.js';
 import { DNA } from './DNA.js';
-
+import { debugShowBoundingBox } from './main.js';
 const treeDistance = 150;
-const treePosXVariation = 0;
+const treePosXVariation = 0.3;
 
 export class Forest {
     constructor() {
@@ -35,11 +35,12 @@ export class Forest {
     }
   
     boundingBox() {
+        // si arreglem el bb dels trees i el poso en constructor fer-lo servir aqui
         return {
-            minX:  Math.min(...this.arboles.map(a => a.x)),
-            maxY:  Math.max(...this.arboles.map(a => a.y)),
-            maxX:  Math.max(...this.arboles.map(a => a.x)),
-            minY:  Math.min(...this.arboles.map(a => a.y))
+            x1:  Math.min(...this.arboles.map(a => a.x)),
+            y1:  Math.max(...this.arboles.map(a => a.y)),
+            x2:  Math.max(...this.arboles.map(a => a.x)),
+            y2:  Math.min(...this.arboles.map(a => a.y))
         };
     }
     // aquesta a desapareixer...
@@ -118,7 +119,12 @@ export class Forest {
         }
         return true;
     }
-    dibujar(xmin = -Infinity, xmax = Infinity, ymin = -Infinity, ymax = Infinity) {
+    draw(xmin = -Infinity, xmax = Infinity, ymin = -Infinity, ymax = Infinity) {
+        if (debugShowBoundingBox) {
+            const bb = this.boundingBox();
+            push(); stroke('green');strokeWeight(25); noFill(); rect(bb.x1, bb.y1, bb.x2 - bb.x1, bb.y2 - bb.y1); pop();
+        }
+
         // Ordenar los árboles por Y (más lejos primero)
         let dibujados = 0;
         const ordenados = [...this.arboles].sort((a, b) => b.y - a.y);
@@ -130,7 +136,10 @@ export class Forest {
                 arbol.draw();
                 dibujados++;
             }
+            else {
+                //console.log (`Árbol fuera de límites: (${arbol.x}, ${arbol.y})`)
+            }
         }
-        console.log(`Árboles dibujados: ${dibujados} de ${this.arboles.length}`);
+        //console.log(`Árboles dibujados: ${dibujados} de ${this.arboles.length}`);
     }
 }

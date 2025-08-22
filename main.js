@@ -1,7 +1,6 @@
 /* Bosque genético con controles (p5.js) */
 import { Forest } from './forest.js';
-import { keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
-import { applyCamera, setCameraParameters } from './camera.js';
+import { initInput, keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
 import { draw as p5draw, windowResized, setupCanvas }            from './rendering.js';
 
 // --- simulation parameters --------------------
@@ -27,7 +26,8 @@ function setup() {
   let cnv2 = document.querySelector('canvas');   // cnv es un p5.Element
   cnv2.addEventListener('wheel', handleZoom, { passive: false });
 
-  
+  initInput(cnv2);
+
   // UI (simple DOM vanilla, sin p5.dom)
   const $ = sel => document.querySelector(sel);
   $('#seed').value = seedValue;
@@ -75,4 +75,3 @@ window.windowResized  = windowResized;
 window.keyPressed   = keyPressed;
 window.keyReleased  = keyReleased;
 window.mouseMoved   = mouseMoved;
-

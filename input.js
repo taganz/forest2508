@@ -1,10 +1,29 @@
 import { logCursorPosition } from "./util.js";
 import { zoomAt, pan } from './camera.js';
 import { toggleGrid } from "./rendering.js";
+import { setupMobileInput } from './inputMobile.js';
 
 export const keysDown = {}
 const panStep = 20;
+export let isMobile = false;
 
+export function initInput(canvas) {
+
+  // Detect if we are on a mobile device
+  const isMobile = _isMobileDevice();
+  if (isMobile) {
+    console.log("Mobile device detected, enabling touch input.");
+    if (typeof setupMobileInput === 'function') {
+      setupMobileInput(canvas);
+    }
+  } else {
+    console.log("Desktop device detected, using mouse input.");
+  }
+}
+
+function _isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 export function keyPressed() {
   keysDown[keyCode] = true;

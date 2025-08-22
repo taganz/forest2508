@@ -98,3 +98,8 @@ export function pan(dx, dy) {
   viewOffsetY += dy;
 }
 
+// Hacer pan accesible globalmente para inputMobile.js
+if (typeof window !== 'undefined') {
+  window.pan = pan;
+}
+

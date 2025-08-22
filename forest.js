@@ -106,9 +106,19 @@ export class Forest {
         }
         return true;
     }
-    dibujar() {
+    dibujar(xmin = -Infinity, xmax = Infinity, ymin = -Infinity, ymax = Infinity) {
         // Ordenar los árboles por Y (más lejos primero)
+        let dibujados = 0;
         const ordenados = [...this.arboles].sort((a, b) => b.y - a.y);
-        for (const t of ordenados) t.draw();
+        for (const arbol of ordenados) {
+            if (
+                arbol.x >= xmin && arbol.x <= xmax &&
+                arbol.y >= ymin && arbol.y <= ymax
+            ) {
+                arbol.draw();
+                dibujados++;
+            }
+        }
+        console.log(`Árboles dibujados: ${dibujados} de ${this.arboles.length}`);
     }
 }

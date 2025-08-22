@@ -1,8 +1,10 @@
 /* Bosque genético con controles (p5.js) */
 import { Forest } from './forest.js';
 import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
-import { keyPressed, keyReleased, mouseMoved } from './ui.js';
+import { keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
 import { applyCamera, setCamera } from './camera.js';
+import { screenToWorldX, screenToWorldY } from './camera.js';
+
 let bosque;
 let seedValue = Math.floor(Math.random()*1e9);
 
@@ -13,6 +15,10 @@ function setup() {
   c.position(0, document.getElementById('ui').offsetHeight + 18);  // que quedi per sota del botons
   c.elt.setAttribute('tabindex', '0'); // Permite que el canvas reciba foco
   c.elt.addEventListener('mouseenter', () => c.elt.focus());
+
+  // Prevent page scroll on canvas wheel
+  let cnv2 = document.querySelector('canvas');   // cnv es un p5.Element
+  cnv2.addEventListener('wheel', handleZoom, { passive: false });
 
   angleMode(RADIANS);
   rectMode(CENTER);
@@ -46,7 +52,7 @@ function reiniciar() {
   setCamera(0.4, width/2, height/2);
   bosque = new Forest();
   //bosque.firstTree(); 
-  bosque.addTreeArea(5);
+  bosque.addTreeArea(15);
     
   // Crea exactamente dos hijos (derecha y abajo), tal como pides:
   //bosque.crearHijosPrimeros();
@@ -64,7 +70,7 @@ function draw() {
 
   drawGridForForest(bosque, 150, 150, 20); // Dibuja una cuadrícula de fondo para referencia
 
-  bosque.dibujar();
+  _drawVisibleForest();
 
   // Mostrar tooltip si Q está pulsada y el ratón está sobre un árbol
   if (keyIsDown(81) || keyIsDown(113)) { // 81 = 'Q', 113 = 'q'
@@ -73,6 +79,33 @@ function draw() {
       drawTreeTooltip(hovered);
     }
   }
+}
+
+function _drawVisibleForest() {
+  const margin = 0.10; // 10% de tolerancia
+
+  // Esquinas del canvas en pantalla
+  const x0 = 0, y0 = 0;
+  const x1 = width, y1 = height;
+
+  // Convierte a coordenadas de mundo
+  let wx0 = screenToWorldX(x0);
+  let wy0 = screenToWorldY(y0);
+  let wx1 = screenToWorldX(x1);
+  let wy1 = screenToWorldY(y1);
+
+  // Calcula el margen extra
+  const dx = Math.abs(wx1 - wx0) * margin;
+  const dy = Math.abs(wy1 - wy0) * margin;
+
+  // Aplica el margen
+  const xmin = Math.min(wx0, wx1) - dx;
+  const xmax = Math.max(wx0, wx1) + dx;
+  const ymin = Math.min(wy0, wy1) - dy;
+  const ymax = Math.max(wy0, wy1) + dy;
+
+  // Llama a bosque.dibujar con los límites
+  bosque.dibujar(xmin, xmax, ymin, ymax);
 }
 
 

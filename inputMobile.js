@@ -32,18 +32,18 @@ export function setupMobileInput(canvas, onMove) {
       const dy = y - lastTouch.y;
       if (Math.abs(dx) > Math.abs(dy)) {
         if (dx > threshold) {
-          if (window.pan) window.pan(-panStep, 0); // derecha
+          if (window.pan) window.pan(panStep, 0); // izquierda
           lastTouch = {x, y};
         } else if (dx < -threshold) {
-          if (window.pan) window.pan(panStep, 0); // izquierda
+          if (window.pan) window.pan(-panStep, 0); // derecha
           lastTouch = {x, y};
         }
       } else {
         if (dy > threshold) {
-          if (window.pan) window.pan(0, -panStep); // abajo
+          if (window.pan) window.pan(0, panStep); // arriba
           lastTouch = {x, y};
         } else if (dy < -threshold) {
-          if (window.pan) window.pan(0, panStep); // arriba
+          if (window.pan) window.pan(0, -panStep); // abajo
           lastTouch = {x, y};
         }
       }

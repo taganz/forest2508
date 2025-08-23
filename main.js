@@ -7,6 +7,8 @@ import { draw as p5draw, windowResized, setupCanvas }            from './renderi
 
 const initialForestSize = 14; // tamaño inicial del bosque como multiplicador de factor de separacion entre arboles (esta en forest de momento)
 export const debugShowBoundingBox = false;
+const treeDistance = 150;
+const treePosXVariation = 0.3;
 let seedValue = Math.floor(Math.random()*1e9);
 
 //-------------------------------------------------
@@ -54,7 +56,7 @@ function reiniciar() {
   randomSeed(seedValue);
   noiseSeed(seedValue);
 
-  bosque = new Forest();
+  bosque = new Forest(treeDistance, treePosXVariation);
   //bosque.firstTree(); 
   bosque.addTreeArea(initialForestSize);
     

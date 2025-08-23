@@ -11,12 +11,22 @@ export function toggleGrid() {
 }
 
 export function setupCanvas() {
+  let canvasWidth = min(800, windowWidth);
+  let canvasHeight = min(600, windowHeight);
+  console.log(`canvas created: ${canvasWidth}x${canvasHeight}`);
+  let cnv = createCanvas(canvasWidth, canvasHeight);
+  resetCanvas();
+  return cnv;
+}
+
+export function resetCanvas() {
+  clear();
   angleMode(RADIANS);
   rectMode(CORNER); 
   frameRate(10);
+  setCameraParameters(0.4, width/2, height/2);
   noLoop();
-  let c = _createCanvasAdaptedToWindow()
-  return c;
+  redraw();
 }
 
 export function draw() {
@@ -37,14 +47,7 @@ export function draw() {
 
 }
 
-function _createCanvasAdaptedToWindow() {
-  let canvasWidth = min(800, windowWidth);
-  let canvasHeight = min(600, windowHeight);
-  console.log(`canvas created: ${canvasWidth}x${canvasHeight}`);
-  let cnv = createCanvas(canvasWidth, canvasHeight);
-  setCameraParameters(0.4, width/2, height/2);
-  return cnv;
-}
+
 
 export function windowResized() {
   let canvasWidth = min(800, windowWidth);

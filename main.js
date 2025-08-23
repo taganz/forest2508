@@ -1,7 +1,7 @@
 /* Bosque genético con controles (p5.js) */
 import { Forest } from './forest.js';
 import { initInput, keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
-import { draw as p5draw, windowResized, setupCanvas }            from './rendering.js';
+import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            from './rendering.js';
 
 // --- simulation parameters --------------------
 
@@ -35,11 +35,11 @@ function setup() {
   $('#seed').value = seedValue;
   $('#btnNewSeed').onclick = () => { seedValue = Math.floor(Math.random()*1e9); $('#seed').value = seedValue; };
   $('#btnApplySeed').onclick = () => { seedValue = parseInt($('#seed').value||0,10); reiniciar(); };
-  $('#btnSpawnLast').onclick = () => { bosque.spawnLast(); redraw(); };
-  $('#btnGrow1').onclick = () => { bosque.crecerPorGeneraciones(1); redraw(); };
-  $('#btnGrow3').onclick = () => { bosque.crecerPorGeneraciones(3); redraw(); };
-  $('#btnGrow1Pos').onclick = () => { bosque.crecerPorGeneracionesPosicion(1); redraw(); };
-  $('#btnReset').onclick = reiniciar;
+  //$('#btnSpawnLast').onclick = () => { bosque.spawnLast(); redraw(); };
+  //$('#btnGrow1').onclick = () => { bosque.crecerPorGeneraciones(1); redraw(); };
+  //$('#btnGrow3').onclick = () => { bosque.crecerPorGeneraciones(3); redraw(); };
+  //$('#btnGrow1Pos').onclick = () => { bosque.crecerPorGeneracionesPosicion(1); redraw(); };
+  $('#btnReset').onclick = () => reiniciar();
   $('#btnSave').onclick = () => saveCanvas('bosque_genetico','png');
 
   // atajos
@@ -53,6 +53,7 @@ function setup() {
 }
 
 function reiniciar() {
+  console.log("Reiniciando con semilla:", seedValue);
   randomSeed(seedValue);
   noiseSeed(seedValue);
 
@@ -64,7 +65,7 @@ function reiniciar() {
   //bosque.crearHijosPrimeros();
   // Si quieres que el bosque siga creciendo por generaciones, descomenta:
   //bosque.crecerPorGeneraciones(3); // p.ej. 3 generaciones
-  redraw();
+  resetCanvas();
 }
 
 

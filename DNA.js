@@ -8,7 +8,7 @@ const paletaMarron = [
     '#A97142', '#5D3A1A'
 ];
 
-const formas = ['triangulo', 'circulo', 'rombo', 'elipse'];
+const formas = ['triangulo', 'circulo', 'elipse'];
         
 // parameters for x,y adaptation, that should be done by evolution....
 const cwA1 = 40 + 40 * Math.random();
@@ -41,7 +41,6 @@ export class DNA {
         this.spaceNeeded = spaceNeeded;
     }
     static aleatorio() {
-        const formas = ['triangulo', 'circulo', 'rombo', 'elipse'];
         const crownWidth = random(28, 80);
         const crownHeight = random(30, 120);
         const trunkWidth = random(4, 14);
@@ -99,7 +98,6 @@ export class DNA {
         } else {
             const k = random(disc);
             if (k === 'crownShape') {
-                const formas = ['triangulo', 'circulo', 'rombo', 'elipse'];
                 nd.crownShape = random(formas.filter(f => f !== this.crownShape));
             } else if (k === 'trunkType') {
                 nd.trunkType = this.trunkType === 'linea' ? 'lineaRamas' : 'linea';

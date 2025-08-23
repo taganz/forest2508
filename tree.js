@@ -119,7 +119,6 @@ export class Tree {
         switch (d.crownShape) {
             case 'triangulo': triangle(cx - d.crownWidth / 2, y + d.trunkHeight, cx + d.crownWidth / 2, y + d.trunkHeight, cx, y + d.trunkHeight + d.crownHeight); break;
             case 'circulo': circle(cx, cy, (d.crownWidth + d.crownHeight) * 0.5); break;
-            case 'rombo': push(); translate(cx, cy); rotate(PI / 4); rect(0, 0, d.crownWidth * 0.8, d.crownHeight * 0.8); pop(); break;
             case 'elipse': ellipse(cx, cy, d.crownWidth, d.crownHeight); break;
         }
         pop();

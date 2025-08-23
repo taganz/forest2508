@@ -11,8 +11,8 @@ const paletaMarron = [
 const formas = ['triangulo', 'circulo', 'rombo', 'elipse'];
         
 // parameters for x,y adaptation, that should be done by evolution....
-const cwA1 = 20 + 20 * Math.random();
-const cwA2 = 80 + 80 * Math.random();
+const cwA1 = 40 + 40 * Math.random();
+const cwA2 = 40 + 40 * Math.random();
 const cwTx = 200 + 1100 * Math.random();
 const cwFx = Math.PI/2 * Math.random();
 const cwTy = 200 + 1200 * Math.random();
@@ -61,8 +61,10 @@ export class DNA {
     static dnaPosition(x, y) {            
         const idx = Math.min(formas.length - 1, Math.floor(formas.length * Math.abs(Math.sin(x/500 + Math.PI/2))));
         const crownShape = formas[idx];
-        const crownWidth = cwA1 + cwA2 * sin (x/cwTx + cwFx) * cos (y/cwTy + cwFy);
-        const crownHeight = chA1 + chA2 * sin (x/chTx + chFx) * cos (y/chTy + chFy);
+        //const crownWidth =  cwA1 * Math.abs(Math.sin (x/cwTx + cwFx)) + cwA2 * Math.abs(Math.cos (y/cwTy + cwFy));
+        const crownWidth = 40 + noise(x/300, y/300) * 150;
+        //const crownHeight = chA1 * Math.abs(Math.sin (x/chTx + chFx)) + chA2 * Math.abs(Math.cos (y/chTy + chFy));
+        const crownHeight = 30 + noise((x+50)/400, (y+50)/30) * 150;
         const idxColor = Math.min(paletaVerdes.length - 1, Math.floor(paletaVerdes.length * Math.abs(Math.sin(x/500 + Math.PI/3))));
         const crownColor = paletaVerdes[idxColor];
         const trunkType = random(['linea', 'lineaRamas']);

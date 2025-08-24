@@ -32,7 +32,7 @@ export function resetCanvas() {
 export function draw() {
 
   clear();
-  background(235);  //248
+  background( "#e3e9d7" );  //248
   noStroke();
 
   applyCamera();

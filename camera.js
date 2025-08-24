@@ -68,7 +68,8 @@ export function screenToWorldX(sx) {
 export function screenToWorldY(sy) {
   // Primero, revertimos el offset y el escalado
   // El height es necesario porque el origen Y cambia con el escalado negativo
-  let wy = (-sy - viewOffsetY + height) / viewScale;
+  //let wy = (-sy - viewOffsetY + height) / viewScale;
+  let wy = (viewOffsetY - sy) / viewScale;
   if (snapToGrid) {
     wy = Math.round(wy / grid_width) * grid_width;
   }
@@ -79,7 +80,7 @@ export function worldToScreenX(wx) {
   return wx * viewScale + viewOffsetX;
 }
 export function worldToScreenY(wy) {
-  return height - viewOffsetY - wy * viewScale;
+  return viewOffsetY - wy * viewScale;
 }
 
 

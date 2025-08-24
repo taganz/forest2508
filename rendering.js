@@ -58,7 +58,7 @@ export function windowResized() {
 }
 
 function _drawVisibleForest() {
-  const margin = 0.10; // 10% de tolerancia
+  const margin = 0.30; // 30% de tolerancia
 
   // Convierte esquinas a coordenadas de mundo
   let wx0 = screenToWorldX(0);
@@ -80,9 +80,9 @@ function _drawVisibleForest() {
 
   if (debugShowBoundingBox)   console.log(`World to draw : (${xmin.toFixed(1)}, ${ymax.toFixed(1)} ) to (${xmax.toFixed(1)}, ${ymin.toFixed(1)})`);
 
-  // Llama a bosque.dibujar con los límites1
-  //bosque.draw(xmin, xmax, ymin, ymax);      <---- NO EM FUNCIONA OPTIMITZAR PER A QUE ES PINTI NOMES EL QUE HI HA EN PANTALLA, HO PINTO TOT, VA RAPID...
-  bosque.draw();
+  // Llama a bosque.drawGrid con los límites de la cámara
+  bosque.drawGrid(xmin, xmax, ymin, ymax);
+  
 }
 
 function _showTooltipIfQPressed () {

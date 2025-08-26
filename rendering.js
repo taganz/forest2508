@@ -4,7 +4,7 @@ import { bosque, debugShowBoundingBox } from "./main.js";
 import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
 import {handleContinuousPan} from "./input.js";
 
-let cnv
+let cnv;
 export let showGrid = false; 
 export function toggleGrid() {
     showGrid = !showGrid;

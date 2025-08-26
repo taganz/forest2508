@@ -34,8 +34,12 @@ function setup() {
   // UI (simple DOM vanilla, sin p5.dom)
   const $ = sel => document.querySelector(sel);
   $('#seed').value = seedValue;
-  $('#btnNewSeed').onclick = () => { seedValue = Math.floor(Math.random()*1e9); $('#seed').value = seedValue; };
-  $('#btnApplySeed').onclick = () => { seedValue = parseInt($('#seed').value||0,10); reiniciar(); };
+  $('#btnNewSeed').onclick = () => {
+    seedValue = Math.floor(Math.random()*1e9);
+    $('#seed').value = seedValue;
+    reiniciar();
+  };
+
   //$('#btnSpawnLast').onclick = () => { bosque.spawnLast(); redraw(); };
   //$('#btnGrow1').onclick = () => { bosque.crecerPorGeneraciones(1); redraw(); };
   //$('#btnGrow3').onclick = () => { bosque.crecerPorGeneraciones(3); redraw(); };

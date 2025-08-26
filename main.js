@@ -9,7 +9,7 @@ const initialForestSize = 1; // tamaño inicial del bosque como multiplicador de
                               // si no faig servir la funcio draw de forest no cal generar arbres
 export const debugShowBoundingBox = false;
 const treeDistance = 180;  // 150
-const treePosXVariation = 0.3;
+const treePosXVariation = 0.6;
 let seedValue = Math.floor(Math.random()*1e9);
 
 //-------------------------------------------------

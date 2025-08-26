@@ -111,17 +111,50 @@ export class Tree {
         }
         pop();
 
-        // Copa
-        push();
-        noStroke();
-        fill(d.crownColor);
+        // Copa con sombra derecha
+        const leftColor = color(d.crownColor);
+        const rightColor = color(red(leftColor) * 0.7, green(leftColor) * 0.7, blue(leftColor) * 0.7);
         const cx = x, cy = y + d.trunkHeight + d.crownHeight * 0.5;
         switch (d.crownShape) {
-            case 'triangulo': triangle(cx - d.crownWidth / 2, y + d.trunkHeight, cx + d.crownWidth / 2, y + d.trunkHeight, cx, y + d.trunkHeight + d.crownHeight); break;
-            case 'circulo': circle(cx, cy, (d.crownWidth + d.crownHeight) * 0.5); break;
-            case 'elipse': ellipse(cx, cy, d.crownWidth, d.crownHeight); break;
+            case 'triangulo':
+                // Izquierda
+                push(); noStroke(); fill(leftColor);
+                beginShape();
+                vertex(cx, y + d.trunkHeight + d.crownHeight);
+                vertex(cx - d.crownWidth / 2, y + d.trunkHeight);
+                vertex(cx, y + d.trunkHeight);
+                endShape(CLOSE);
+                pop();
+                // Derecha
+                push(); noStroke(); fill(rightColor);
+                beginShape();
+                vertex(cx, y + d.trunkHeight + d.crownHeight);
+                vertex(cx, y + d.trunkHeight);
+                vertex(cx + d.crownWidth / 2, y + d.trunkHeight);
+                endShape(CLOSE);
+                pop();
+                break;
+            case 'circulo':
+                // Izquierda
+                push(); noStroke(); fill(leftColor);
+                arc(cx, cy, (d.crownWidth + d.crownHeight) * 0.5, (d.crownWidth + d.crownHeight) * 0.5, HALF_PI, 3 * HALF_PI, PIE);
+                pop();
+                // Derecha
+                push(); noStroke(); fill(rightColor);
+                arc(cx, cy, (d.crownWidth + d.crownHeight) * 0.5, (d.crownWidth + d.crownHeight) * 0.5, 3 * HALF_PI, HALF_PI, PIE);
+                pop();
+                break;
+            case 'elipse':
+                // Izquierda
+                push(); noStroke(); fill(leftColor);
+                arc(cx, cy, d.crownWidth, d.crownHeight, HALF_PI, 3 * HALF_PI, PIE);
+                pop();
+                // Derecha
+                push(); noStroke(); fill(rightColor);
+                arc(cx, cy, d.crownWidth, d.crownHeight, 3 * HALF_PI, HALF_PI, PIE);
+                pop();
+                break;
         }
-        pop();
     }
 
 }

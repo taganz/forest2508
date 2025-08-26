@@ -6,7 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body{margin:0;background:#f8f8f8;font-family:system-ui,Segoe UI,Roboto,Arial}
-      #ui{position:fixed;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;z-index:10}
+     #ui{
+  position:fixed;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  z-index:10;
+}
       #ui>*{padding:.5rem .7rem;border:1px solid #ddd;border-radius:10px;background:#fff;cursor:pointer}
       #seedWrap{display:flex;gap:6px;align-items:center}
       #seed{width:110px;padding:.45rem .5rem;border:1px solid #ddd;border-radius:8px}

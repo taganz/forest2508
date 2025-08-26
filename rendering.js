@@ -53,6 +53,7 @@ export function draw() {
 export function windowResized() {
   let canvasWidth = min(800, windowWidth);
   let canvasHeight = min(600, windowHeight);
+  cnv.position((windowWidth - width) / 2, document.getElementById('ui').offsetHeight + 18);
   console.log(`canvas resized: ${canvasWidth}x${canvasHeight}`);
   resizeCanvas(canvasWidth, canvasHeight);
   setCameraParameters(0.4, width/2, height/2);

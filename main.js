@@ -21,7 +21,9 @@ function setup() {
 
   //let c = createCanvas(windowWidth, windowHeight)
   c.parent('canvas-container');   // per a que surti dins del div
-  c.position(0, document.getElementById('ui').offsetHeight + 18);  // que quedi per sota del botons
+  //c.position(0, document.getElementById('ui').offsetHeight + 18);  // que quedi per sota del botons
+  const uiOffset = document.getElementById('ui').offsetHeight + 18;
+  c.position((windowWidth - c.width) / 2, uiOffset);
   c.elt.setAttribute('tabindex', '0'); // Permite que el canvas reciba foco
   c.elt.addEventListener('mouseenter', () => c.elt.focus());
 

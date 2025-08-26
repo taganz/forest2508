@@ -161,7 +161,7 @@ export class Forest {
         const startY = Math.floor(ymin / step) * step;
         const endY   = Math.ceil(ymax / step) * step;
         for (let x = startX; x <= endX; x += step) {
-            for (let y = startY; y <= endY; y += step) {
+            for (let y = endY; y > startY; y -= step) {
                 const tx = x + this.treeDistance * noise(x/cXoffsetT, (y+500) /cYoffsetT);
                 const ty = y + this.treeDistance * noise(x/cXoffsetT, (y+300) /cYoffsetT);
                 const dna = DNA.dnaPosition(tx, ty);

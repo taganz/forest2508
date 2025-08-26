@@ -4,7 +4,7 @@ import { bosque, debugShowBoundingBox } from "./main.js";
 import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
 import {handleContinuousPan} from "./input.js";
 
-
+let cnv
 export let showGrid = false; 
 export function toggleGrid() {
     showGrid = !showGrid;
@@ -14,7 +14,7 @@ export function setupCanvas() {
   let canvasWidth = min(800, windowWidth);
   let canvasHeight = min(600, windowHeight);
   console.log(`canvas created: ${canvasWidth}x${canvasHeight}`);
-  let cnv = createCanvas(canvasWidth, canvasHeight);
+  cnv = createCanvas(canvasWidth, canvasHeight);
   resetCanvas();
   return cnv;
 }
@@ -23,7 +23,7 @@ export function resetCanvas() {
   clear();
   angleMode(RADIANS);
   rectMode(CORNER); 
-  frameRate(10);
+  frameRate(12);
   setCameraParameters(0.4, width/2, height/2);
   noLoop();
   redraw();

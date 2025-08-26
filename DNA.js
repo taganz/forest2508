@@ -1,6 +1,11 @@
 const paletaVerdes = [
-    '#6FBF73', '#4CAF50', '#81C784',
-    '#2E7D32', '#A5D6A7'
+    '#6FBF73' 
+    ,'#C9E265' 
+    ,'#81C784'
+    ,'#2E7D32' 
+    ,'#4CAF50'
+    ,'#A5D6A7'
+    ,'#B7D84B'  
 ];
 
 const paletaMarron = [
@@ -58,13 +63,13 @@ export class DNA {
 
     }
     static dnaPosition(x, y) {            
-        const idx = Math.min(formas.length - 1, Math.floor(formas.length * 0.7 * noise((x+10)/70, (y+35)/120)));
+        const idx = Math.min(formas.length - 1, Math.floor(formas.length * 0.7 * noise((x+10)/700, (y+35)/1200)));
         const crownShape = formas[idx];
         //const crownWidth =  cwA1 * Math.abs(Math.sin (x/cwTx + cwFx)) + cwA2 * Math.abs(Math.cos (y/cwTy + cwFy));
         const crownWidth = 40 + noise(x/300, y/300) * 150;
         //const crownHeight = chA1 * Math.abs(Math.sin (x/chTx + chFx)) + chA2 * Math.abs(Math.cos (y/chTy + chFy));
         const crownHeight = 30 + noise((x+50)/400, (y+50)/30) * 150;
-        const idxColor = Math.min(paletaVerdes.length - 1, Math.floor(paletaVerdes.length * noise(x/50, (y+25)/100)));
+        const idxColor = Math.min(paletaVerdes.length - 1, Math.floor(paletaVerdes.length * noise(x/1500, (y+500)/1800)));
         const crownColor = paletaVerdes[idxColor];
         const trunkType = random(['linea', 'lineaRamas']);
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);

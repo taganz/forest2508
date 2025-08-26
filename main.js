@@ -8,7 +8,7 @@ import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            fr
 const initialForestSize = 1; // tamaño inicial del bosque como multiplicador de factor de separacion entre arboles (esta en forest de momento).
                               // si no faig servir la funcio draw de forest no cal generar arbres
 export const debugShowBoundingBox = false;
-const treeDistance = 180;  // 150
+const treeDistance = 150 + 20 * Math.random();  // 150
 const treePosXVariation = 0.6;
 let seedValue = Math.floor(Math.random()*1e9);
 

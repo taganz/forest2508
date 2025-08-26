@@ -20,3 +20,5 @@ A generative art project using p5.js that simulates a walk through a procedurall
 
 ## License
 MIT License
+
+

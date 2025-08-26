@@ -11,6 +11,9 @@ import { DNA } from './DNA.js';
 import { debugShowBoundingBox } from './main.js';
 import {worldToScreenX, worldToScreenY} from './camera.js';
 
+const cXoffsetT = 200 + 1500 * Math.random();
+const cYoffsetT = 200 + 1500 * Math.random();
+
 export class Forest {
     constructor(treeDistance, treePosXVariation) {
         this.arboles = [];
@@ -149,7 +152,7 @@ export class Forest {
     // Dibuja una cuadrícula de árboles generando el DNA para cada posición visible
     // No fa servir els arbres guardats, nomes la posició
     drawGrid(xmin = -Infinity, xmax = Infinity, ymin = -Infinity, ymax = Infinity) {
-        console.log(`Dibujando cuadrícula: (${xmin}, ${ymin}) a (${xmax}, ${ymax})`);
+        //console.log(`Dibujando cuadrícula: (${xmin}, ${ymin}) a (${xmax}, ${ymax})`);
         // Calcula los múltiplos de treeDistance que cubren la ventana
         const step = this.treeDistance;
         // Asegura que los límites sean múltiplos exactos de step
@@ -159,8 +162,10 @@ export class Forest {
         const endY   = Math.ceil(ymax / step) * step;
         for (let x = startX; x <= endX; x += step) {
             for (let y = startY; y <= endY; y += step) {
-                const dna = DNA.dnaPosition(x, y);
-                const tempTree = new Tree(x, y, dna);
+                const tx = x + this.treeDistance * noise(x/cXoffsetT, (y+500) /cYoffsetT);
+                const ty = y + this.treeDistance * noise(x/cXoffsetT, (y+300) /cYoffsetT);
+                const dna = DNA.dnaPosition(tx, ty);
+                const tempTree = new Tree(tx, ty, dna);
                 tempTree.draw();
             }
         }
@@ -170,7 +175,7 @@ export class Forest {
     //
     // Dibuja puntos rojos y muestra coordenadas de pantalla y mundo para debug
     drawGridDebug(xmin = -Infinity, xmax = Infinity, ymin = -Infinity, ymax = Infinity) {
-        console.log(`Dibujando cuadrícula: (${xmin}, ${ymin}) a (${xmax}, ${ymax})`);
+        //console.log(`Dibujando cuadrícula: (${xmin}, ${ymin}) a (${xmax}, ${ymax})`);
         const step = this.treeDistance;
         const x0 = Math.round(xmin / step) * step;
         const x1 = Math.round(xmax / step) * step;

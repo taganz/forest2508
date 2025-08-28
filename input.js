@@ -4,7 +4,7 @@ import { toggleGrid } from "./rendering.js";
 import { setupMobileInput } from './inputMobile.js';
 
 export const keysDown = {}
-const panStep = 20;
+const panStep = 5;
 export let isMobile = false;
 
 export function initInput(canvas) {

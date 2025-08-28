@@ -5,12 +5,14 @@ import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.j
 import {handleContinuousPan} from "./input.js";
 
 let cnv;
+let frameRateVal = 12;
 export let showGrid = false; 
 export function toggleGrid() {
     showGrid = !showGrid;
 }
 
-export function setupCanvas() {
+export function setupCanvas(frameRate = 12) {
+  frameRateVal = frameRate;
   let canvasWidth = min(800, windowWidth);
   let canvasHeight = min(600, windowHeight);
   console.log(`canvas created: ${canvasWidth}x${canvasHeight}`);
@@ -23,7 +25,7 @@ export function resetCanvas() {
   clear();
   angleMode(RADIANS);
   rectMode(CORNER); 
-  frameRate(12);
+  frameRate(frameRateVal);
   setCameraParameters(0.4, width/2, height/2);
   noLoop();
   redraw();

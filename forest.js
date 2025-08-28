@@ -8,11 +8,8 @@
 */
 import { Tree } from './tree.js';
 import { DNA } from './DNA.js';
-import { debugShowBoundingBox } from './main.js';
+import { debugShowBoundingBox, zoneSystem } from './main.js';
 import {worldToScreenX, worldToScreenY} from './camera.js';
-
-const cXoffsetT = 200 + 1500 * Math.random();
-const cYoffsetT = 200 + 1500 * Math.random();
 
 export class Forest {
     constructor(treeDistance, treePosXVariation) {
@@ -162,10 +159,8 @@ export class Forest {
         const endY   = Math.ceil(ymax / step) * step;
         for (let x = startX; x <= endX; x += step) {
             for (let y = endY; y > startY; y -= step) {
-                const tx = x + this.treeDistance * noise(x/cXoffsetT, (y+500) /cYoffsetT);
-                const ty = y + this.treeDistance * noise(x/cXoffsetT, (y+300) /cYoffsetT);
-                const dna = DNA.dnaPosition(tx, ty);
-                const tempTree = new Tree(tx, ty, dna);
+                const dna = DNA.dnaPosition(x, y, this.treeDistance);
+                const tempTree = new Tree(x, y, dna);
                 tempTree.draw();
             }
         }

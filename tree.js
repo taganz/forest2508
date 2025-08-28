@@ -18,8 +18,8 @@ export class Tree {
 
     constructor(wx, wy, dna) { 
         // world coordinates
-        this.x = wx; 
-        this.y = wy; 
+        this.x = wx + dna.xoffset; 
+        this.y = wy + dna.yoffset; 
         if (dna == null) {
             this.dna = DNA.aleatorio();
         } else {

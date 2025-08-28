@@ -2,6 +2,7 @@
 import { Forest } from './forest.js';
 import { initInput, keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
 import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            from './rendering.js';
+import { createZoneSystem } from './biomes.js';
 
 // --- simulation parameters --------------------
 
@@ -11,13 +12,15 @@ export const debugShowBoundingBox = false;
 const treeDistance = 150 + 20 * Math.random();  // 150
 const treePosXVariation = 0.6;
 let seedValue = Math.floor(Math.random()*1e9);
+let frameRateVal = 60;
 
 //-------------------------------------------------
 
 export let bosque;
+export let zoneSystem;
 
 function setup() {
-  let c = setupCanvas();
+  let c = setupCanvas(frameRateVal);
 
   //let c = createCanvas(windowWidth, windowHeight)
   c.parent('canvas-container');   // per a que surti dins del div
@@ -63,6 +66,7 @@ function reiniciar() {
   console.log("Reiniciando con semilla:", seedValue);
   randomSeed(seedValue);
   noiseSeed(seedValue);
+  zoneSystem = initZoneSystem();
 
   bosque = new Forest(treeDistance, treePosXVariation);
   //bosque.firstTree(); 
@@ -75,6 +79,33 @@ function reiniciar() {
   resetCanvas();
 }
 
+function initZoneSystem () {
+  const zoneSystemParams = {
+  seed: 20250828,     
+	// escala global del mapa (cuanto menor, más grandes los parches)
+  baseFreq: 0.0006, // 0.002, // mas pequeño zonas mas grandes
+	// parámetros fBM del “campo de zonas”
+  zoneNoise: { octaves: 5, lacunarity: 2.0, gain: 0.5 },
+	// warping para dar formas orgánicas
+  warp:  { seed: 777, freq: 0.0015, amp: 120, octaves: 3 },
+	// campos adicionales (altura/temperatura/humedad) para enriquecer bioma
+  elevNoise: { seed: 11, octaves: 5, freq: 0.0018 },
+  tempNoise: { seed: 23, octaves: 4, freq: 0.0009 },
+  moistNoise: { seed: 31, octaves: 4, freq: 0.0012 },
+  // tabla de zonas por umbrales del campo principal
+  zones: [
+    { id: 'Ocean',     max: 0.28, color: '#3a6ea5' },
+    { id: 'Coast',      max: 0.34, color: '#7fbbe3' },
+    { id: 'Meadow',    max: 0.52, color: '#77c56b' },
+    { id: 'Forest',     max: 0.68, color: '#2e8b57' },
+    { id: 'Jungle',      max: 0.82, color: '#188c4f' },
+    { id: 'Mountain',    max: 0.92, color: '#8a7f7a' },
+    { id: 'Snow',      max: 1.01, color: '#f0f4f7' }
+  ]
+	} 
+	 const zs = createZoneSystem(zoneSystemParams);
+   return zs;
+ }
 
 // Bind p5’s globals
 // p5js espera trobar els callbacks en window i ho posem com modul no ho troba

@@ -1,3 +1,6 @@
+import { zone2Num } from './biomes.js';   // aixo hauria d'estar dins del biomeSystem? <----
+import { zoneSystem } from './main.js';
+
 const paletaVerdes = [
     '#6FBF73' 
     ,'#C9E265' 
@@ -30,11 +33,14 @@ const chFx = Math.PI/2 * Math.random();
 const chTy = 200 + 400 * Math.random();
 const chFy = Math.PI/2 * Math.random();
 
+ 
+const cXoffsetT = -0.5 + 1 * Math.random();
+const cYoffsetT = -0.5 + 1 * Math.random();
 
 
 /*=========================== DNA ===========================*/
 export class DNA {
-    constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded }) {
+    constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset }) {
         this.crownShape = crownShape;
         this.crownHeight = crownHeight;
         this.crownWidth = crownWidth;
@@ -44,6 +50,8 @@ export class DNA {
         this.trunkWidth = trunkWidth;
         this.trunkColor = trunkColor;
         this.spaceNeeded = spaceNeeded;
+        this.xoffset = xoffset;
+        this.yoffset = yoffset;
     }
     static aleatorio() {
         const crownWidth = random(28, 80);
@@ -58,25 +66,37 @@ export class DNA {
             trunkType: random(['linea', 'lineaRamas']),
             trunkHeight, trunkWidth,
             trunkColor: random(paletaMarron),
-            spaceNeeded
+            spaceNeeded,
+            xoffset: cXoffsetT,
+            yoffset: cYoffsetT
         });
 
     }
-    static dnaPosition(x, y) {            
-        const idx = Math.min(formas.length - 1, Math.floor(formas.length * 0.7 * noise((x+10)/700, (y+35)/1200)));
+    static dnaPosition(x, y, treeDistance=150) {           
+        const zone = zoneSystem.getZone(x, y);
+        const zoneNum = zone2Num(zone.id);
+
+        // Make crownShape change proportionally to zoneNum
+        // zoneNum starts at 1, formas.length is the number of shapes
+        // Map zoneNum to [0, formas.length-1]
+        const idx = Math.max(0, Math.min(formas.length - 1, Math.round((zoneNum - 1) * (formas.length - 1) / Math.max(1, 7 - 1))));
         const crownShape = formas[idx];
         //const crownWidth =  cwA1 * Math.abs(Math.sin (x/cwTx + cwFx)) + cwA2 * Math.abs(Math.cos (y/cwTy + cwFy));
         const crownWidth = 40 + noise(x/300, y/300) * 150;
         //const crownHeight = chA1 * Math.abs(Math.sin (x/chTx + chFx)) + chA2 * Math.abs(Math.cos (y/chTy + chFy));
         const crownHeight = 30 + noise((x+50)/400, (y+50)/30) * 150;
-        const idxColor = Math.min(paletaVerdes.length - 1, Math.floor(paletaVerdes.length * noise(x/1500, (y+500)/1800)));
-        const crownColor = paletaVerdes[idxColor];
+    // Make crownColor proportional to zoneNum
+    // Map zoneNum to [0, paletaVerdes.length-1]
+    const idxColor = Math.max(0, Math.min(paletaVerdes.length - 1, Math.round((zoneNum - 1) * (paletaVerdes.length - 1) / Math.max(1, 7 - 1))));
+    const crownColor = paletaVerdes[idxColor];
         const trunkType = random(['linea', 'lineaRamas']);
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);
         const trunkColor = random(paletaMarron);
         const spaceNeeded = Math.max(60, crownWidth * 1.2, trunkHeight * 0.9);
-        
+        const xoffset = treeDistance *  (1+zoneNum/30); 
+        const yoffset = treeDistance *  (1+zoneNum/30); 
+
         return new DNA({
             crownShape : crownShape
             , crownWidth : crownWidth  
@@ -87,6 +107,8 @@ export class DNA {
             , trunkWidth : trunkWidth
             , trunkColor : trunkColor
             , spaceNeeded : spaceNeeded
+            , xoffset: xoffset
+            , yoffset: yoffset
         });
     }
     mutado10() {

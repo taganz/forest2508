@@ -1,5 +1,7 @@
 # Forest Walk
 
+<img src="./assets/forestwalk.png" alt="Screenshot of Forest Walk" width="500"/>
+
 A generative art project using p5.js that simulates a walk through a procedurally generated forest. Each tree is created with unique DNA, resulting in a diverse and infinite landscape.
 
 ## Features

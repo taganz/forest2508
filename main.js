@@ -93,6 +93,7 @@ function initZoneSystem () {
   tempNoise: { seed: 23, octaves: 4, freq: 0.0009 },
   moistNoise: { seed: 31, octaves: 4, freq: 0.0012 },
   // tabla de zonas por umbrales del campo principal
+  /*
   zones: [
     { id: 'Ocean',     max: 0.28, color: '#3a6ea5' },
     { id: 'Coast',      max: 0.34, color: '#7fbbe3' },
@@ -101,6 +102,16 @@ function initZoneSystem () {
     { id: 'Jungle',      max: 0.82, color: '#188c4f' },
     { id: 'Mountain',    max: 0.92, color: '#8a7f7a' },
     { id: 'Snow',      max: 1.01, color: '#f0f4f7' }
+  ]
+    */
+    zones: [
+    { id: '1',     max: 0.40, color: '#3a6ea5' },
+    //{ id: '2',      max: 0.34, color: '#7fbbe3' },
+    { id: '3',    max: 0.60, color: '#77c56b' },
+    //{ id: '4',     max: 0.68, color: '#2e8b57' },
+    { id: '5',      max: 0.75, color: '#188c4f' },
+    //{ id: '6',    max: 0.92, color: '#8a7f7a' },
+    { id: '7',      max: 1.01, color: '#f0f4f7' }
   ]
 	} 
 	 const zs = createZoneSystem(zoneSystemParams);

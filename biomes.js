@@ -30,7 +30,8 @@ Ajustes rápidos
 
 // -------------------- Configuración de zonas (biomas) --------------------
 // OJO, getZone torna aixo + els altres fields
-export const zones = [
+const zones_originals = [
+	// basiques
     { id: 'Ocean',  max: 0.28, color: '#3a6ea5' },
     { id: 'Coast',  max: 0.34, color: '#7fbbe3' },
     { id: 'Meadow', max: 0.52, color: '#77c56b' },
@@ -38,6 +39,7 @@ export const zones = [
     { id: 'Jungle', max: 0.82, color: '#188c4f' },
     { id: 'Mountain',   max: 0.92, color: '#8a7f7a' },
     { id: 'Snow',       max: 1.01, color: '#f0f4f7' },
+	// derivades
     { id: 'Taiga',      max: 99, color: '#3d6b4b' },
     { id: 'Savanna',    max: 99, color: '#b2c85a' },
     { id: 'High Mountain',  max: 99, color: '#cfc6c3' },
@@ -46,14 +48,9 @@ export const zones = [
 ];
 
 
-// Array of biome ids for easy access
-export const zoneIds = zones.map(b => b.id);
 
-// Returns the position (starting from 1) of a biome id in the biomes array, or 0 if not found
-export const zone2Num = (id) => {
-	const idx = zoneIds.indexOf(id);
-	return idx === -1 ? 0 : idx + 1;
-};
+
+
 
 export function createZoneSystem({
   seed = 20250828,
@@ -82,9 +79,15 @@ export function createZoneSystem({
 	// opcional: cache por chunks para acelerar consultas masivas
 	const CHUNK = 256; // píxeles (ajusta a tu “tile size”)
 	const cache = new Map(); // key "cx,cy" -> objeto con campos muestreados
-
-    console.log("Creating zone system");
-    console.log("zoneIds:", zoneIds);
+	
+    // Returns the position (starting from 1) of a biome id in the biomes array, or 0 if not found
+	const zone2Num = (id) => {
+		const zoneIds = zones.map(b => b.id); // Array of biome ids for easy access
+		const idx = zoneIds.indexOf(id);
+		return idx === -1 ? 0 : idx + 1;
+	};
+	console.log("Creating zone system");
+    console.log("zones:", zones);
 
 
 	function sampleFields(x, y) {
@@ -159,7 +162,7 @@ export function createZoneSystem({
 			return entry.zones[ly * CHUNK + lx];
 		}
 
-		return { getZone, getZoneCached, config: { seed, baseFreq, zones, warp, zoneNoise } };
+		return { getZone, getZoneCached, zone2Num, config: { seed, baseFreq, zones, warp, zoneNoise } };
 }
 
 

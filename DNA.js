@@ -1,4 +1,3 @@
-import { zone2Num } from './biomes.js';   // aixo hauria d'estar dins del biomeSystem? <----
 import { zoneSystem } from './main.js';
 
 const paletaVerdes = [
@@ -74,7 +73,7 @@ export class DNA {
     }
     static dnaPosition(x, y, treeDistance=150) {           
         const zone = zoneSystem.getZone(x, y);
-        const zoneNum = zone2Num(zone.id);
+        const zoneNum = zoneSystem.zone2Num(zone.id);
 
         // Make crownShape change proportionally to zoneNum
         // zoneNum starts at 1, formas.length is the number of shapes
@@ -89,10 +88,13 @@ export class DNA {
     // Map zoneNum to [0, paletaVerdes.length-1]
     const idxColor = Math.max(0, Math.min(paletaVerdes.length - 1, Math.round((zoneNum - 1) * (paletaVerdes.length - 1) / Math.max(1, 7 - 1))));
     const crownColor = paletaVerdes[idxColor];
-        const trunkType = random(['linea', 'lineaRamas']);
+        // Make trunkType dependent on zoneNum (example: even zones 'linea', odd zones 'lineaRamas')
+        const trunkType = (zoneNum % 2 === 0) ? 'linea' : 'lineaRamas';
+
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);
-        const trunkColor = random(paletaMarron);
+        const idxTrunkColor = Math.max(0, Math.min(paletaMarron.length - 1, Math.round((zoneNum - 1) * (paletaMarron.length - 1) / Math.max(1, 7 - 1))));
+        const trunkColor = paletaMarron[idxTrunkColor];
         const spaceNeeded = Math.max(60, crownWidth * 1.2, trunkHeight * 0.9);
         const xoffset = treeDistance *  (1+zoneNum/30); 
         const yoffset = treeDistance *  (1+zoneNum/30); 

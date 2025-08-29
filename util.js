@@ -1,5 +1,4 @@
 import { screenToWorldX, screenToWorldY, worldToScreenX, worldToScreenY, viewOffsetX, viewOffsetY, viewScale } from './camera.js';
-import { zone2Num } from "./biomes.js";
 import { zoneSystem } from "./main.js";
 /*======================================*/
 /**

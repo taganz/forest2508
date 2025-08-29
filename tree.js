@@ -2,7 +2,6 @@
 
 import { DNA } from "./DNA.js";
 import { debugShowBoundingBox } from "./main.js";
-import { zone2Num } from "./biomes.js";
 import { zoneSystem } from "./main.js";
 
 /*=========================== TREE ===========================
@@ -13,17 +12,17 @@ import { zoneSystem } from "./main.js";
     hijoDNA() returns a mutated DNA for the child tree.
 
 */
+const debugHideTrees = false;  // if true, hides all trees and draw only base
 
 let drawTreeBase = false;  // dibuixa una elipse sota l'arbre amb el color de la zona
-const treeBaseSizeX = 200;  // 50  - 200 to fill region
-const treeBaseSizeY = 200;  // 25  - 200 to fill region
+const treeBaseSizeX = 100;  // 50  - 200 to fill region
+const treeBaseSizeY = 50;  // 25  - 200 to fill region
 
 export function setDrawTreeBase(dtb=null) {
     if (dtb === null) dtb = !drawTreeBase;
     drawTreeBase = dtb;
 }
 
-const debugHideTrees = true;  // if true, hides all trees and draw only base
 
 export class Tree {
 
@@ -37,7 +36,7 @@ export class Tree {
             this.dna = dna;
         }
         this.zone = zoneSystem.getZone(this.x, this.y);
-        this.zoneNum = zone2Num(this.zone.id);
+        this.zoneNum = zoneSystem.zone2Num(this.zone.id);
         const c = this.zone.color;
         const alpha = 200; // Ajusta de 0 a 255 según la transparencia deseada
         this.zoneColor = color(red(c) * 0.7, green(c) * 0.7, blue(c) * 0.7, alpha);

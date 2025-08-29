@@ -2,6 +2,7 @@ import { logCursorPosition } from "./util.js";
 import { zoomAt, pan } from './camera.js';
 import { toggleGrid } from "./rendering.js";
 import { setupMobileInput } from './inputMobile.js';
+import { setDrawTreeBase } from "./tree.js";
 
 export const keysDown = {}
 const panStep = 5;
@@ -32,6 +33,7 @@ export function keyPressed() {
     loop();     // empieza a repintar al pulsar Q
   }
   if (key === "1") {    logCursorPosition();  }
+  if (key === "2") {    setDrawTreeBase();  }
   // arrow keys for pan
   if (keyCode===LEFT_ARROW)  { pan(panStep,0); loop();  }   // loop en comptes de redraw per a permetre continuous pan
   if (keyCode===RIGHT_ARROW) { pan(-panStep,0); loop(); }

@@ -1,5 +1,6 @@
 import { screenToWorldX, screenToWorldY, worldToScreenX, worldToScreenY, viewOffsetX, viewOffsetY, viewScale } from './camera.js';
-
+import { zone2Num } from "./biomes.js";
+import { zoneSystem } from "./main.js";
 /*======================================*/
 /**
  * Dibuja una cuadrícula que cubre el área donde hay árboles.
@@ -201,4 +202,6 @@ export function logCursorPosition() {
   console.log(`World position: (${screenToWorldX(mouseX).toFixed(1)}, ${screenToWorldY(mouseY).toFixed(1)})`);
   console.log(`Camera scale: ${viewScale.toFixed(1)}`);
   console.log(`Camera offset: (${viewOffsetX.toFixed(1)}, ${viewOffsetY.toFixed(1)})`);
+  const zone = zoneSystem.getZone(screenToWorldX(mouseX), screenToWorldY(mouseY)) ;
+  console.log(`Zone: ${zone.id}`);
 }

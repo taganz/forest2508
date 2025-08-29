@@ -2,7 +2,8 @@
 
 import { DNA } from "./DNA.js";
 import { debugShowBoundingBox } from "./main.js";
-
+import { zone2Num } from "./biomes.js";
+import { zoneSystem } from "./main.js";
 
 /*=========================== TREE ===========================
 
@@ -13,6 +14,16 @@ import { debugShowBoundingBox } from "./main.js";
 
 */
 
+let drawTreeBase = false;  // dibuixa una elipse sota l'arbre amb el color de la zona
+const treeBaseSizeX = 200;  // 50  - 200 to fill region
+const treeBaseSizeY = 200;  // 25  - 200 to fill region
+
+export function setDrawTreeBase(dtb=null) {
+    if (dtb === null) dtb = !drawTreeBase;
+    drawTreeBase = dtb;
+}
+
+const debugHideTrees = true;  // if true, hides all trees and draw only base
 
 export class Tree {
 
@@ -21,10 +32,15 @@ export class Tree {
         this.x = wx + dna.xoffset; 
         this.y = wy + dna.yoffset; 
         if (dna == null) {
-            this.dna = DNA.aleatorio();
+            this.dna = DNA.aleatorio(wx, wy);
         } else {
             this.dna = dna;
         }
+        this.zone = zoneSystem.getZone(this.x, this.y);
+        this.zoneNum = zone2Num(this.zone.id);
+        const c = this.zone.color;
+        const alpha = 200; // Ajusta de 0 a 255 según la transparencia deseada
+        this.zoneColor = color(red(c) * 0.7, green(c) * 0.7, blue(c) * 0.7, alpha);
     }
 
     hijoDNA() { 
@@ -97,6 +113,18 @@ export class Tree {
             push(); stroke('red');strokeWeight(54); point(x, y); pop();
             push(); stroke('red');strokeWeight(5); noFill(); rect(bb.x1, bb.y1, bb.x2 - bb.x1, bb.y2 - bb.y1); pop();
         }
+        
+        // base
+        if (drawTreeBase){ 
+            push();
+            fill(this.zoneColor);
+            noStroke();
+            ellipse(this.x, this.y, treeBaseSizeX, treeBaseSizeY);
+            pop();
+        }
+
+        if (debugHideTrees) return;
+
         // Tronco
         push();
         stroke(d.trunkColor); strokeWeight(d.trunkWidth); strokeCap(ROUND);

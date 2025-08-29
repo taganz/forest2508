@@ -29,7 +29,8 @@ Ajustes rápidos
 // <--- OJO, PICK ZONE ESTA FET A MANIJA PER LES ZONES DE L'EXEMPLE ----
 
 // -------------------- Configuración de zonas (biomas) --------------------
-const zones = [
+// OJO, getZone torna aixo + els altres fields
+export const zones = [
     { id: 'Ocean',  max: 0.28, color: '#3a6ea5' },
     { id: 'Coast',  max: 0.34, color: '#7fbbe3' },
     { id: 'Meadow', max: 0.52, color: '#77c56b' },

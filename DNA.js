@@ -1,6 +1,6 @@
 import { zoneSystem } from './main.js';
 
-const paletaVerdes = [
+const paletaVerdes_base = [
     '#6FBF73' 
     ,'#C9E265' 
     ,'#81C784'
@@ -10,13 +10,16 @@ const paletaVerdes = [
     ,'#B7D84B'  
 ];
 
-const paletaMarron = [
+const paletaMarron_base = [
     '#7B4B21', '#8D5524',
     '#A97142', '#5D3A1A'
 ];
 
-const formas = ['triangulo', 'circulo', 'elipse'];
-        
+const formas_base = ['triangulo', 'circulo', 'elipse'];
+let formas;
+let paletaMarron, paletaVerdes;
+
+
 // parameters for x,y adaptation, that should be done by evolution....
 const cwA1 = 40 + 40 * Math.random();
 const cwA2 = 40 + 40 * Math.random();
@@ -38,6 +41,11 @@ const cYoffsetT = -0.5 + 1 * Math.random();
 
 
 /*=========================== DNA ===========================*/
+export function initDNA(seed=1234, pMarron = paletaMarron_base, pVerdes = paletaVerdes_base) {
+    formas = shuffle(formas_base);
+    paletaMarron = shuffle(pMarron);
+    paletaVerdes = shuffle(pVerdes);
+} 
 export class DNA {
     constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset }) {
         this.crownShape = crownShape;

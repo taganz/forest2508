@@ -33,8 +33,8 @@ export class Forest {
                 this.addTreeAt(x + this.treeDistance * random(-this.treePosXVariation, +this.treePosXVariation), y + this.treeDistance * random(-this.treePosXVariation, +this.treePosXVariation));
             }
         }
-        console.log(`Árboles creados en área: ${this.arboles.length} de intentados ${treeIntentados}`);
-        console.log('Límite bounding box:', this.boundingBox());
+        //console.log(`Árboles creados en área: ${this.arboles.length} de intentados ${treeIntentados}`);
+        //console.log('Límite bounding box:', this.boundingBox());
     }
   
     boundingBox() {

@@ -3,6 +3,7 @@ import { Forest } from './forest.js';
 import { initInput, keyPressed, keyReleased, handleZoom, mouseMoved } from './input.js';
 import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            from './rendering.js';
 import { createZoneSystem } from './biomes.js';
+import { initDNA } from './DNA.js';
 
 // --- simulation parameters --------------------
 
@@ -35,6 +36,7 @@ function setup() {
   cnv2.addEventListener('wheel', handleZoom, { passive: false });
 
   initInput(cnv2);
+  initDNA(seedValue);
 
   // UI (simple DOM vanilla, sin p5.dom)
   const $ = sel => document.querySelector(sel);
@@ -44,6 +46,7 @@ function setup() {
     $('#seed').value = seedValue;
     reiniciar();
   };
+   $('#btnApplySeed').onclick = () => { seedValue = parseInt($('#seed').value||0,10); reiniciar(); };
 
   //$('#btnSpawnLast').onclick = () => { bosque.spawnLast(); redraw(); };
   //$('#btnGrow1').onclick = () => { bosque.crecerPorGeneraciones(1); redraw(); };

@@ -4,6 +4,7 @@ import { initInput, keyPressed, keyReleased, handleZoom, mouseMoved } from './in
 import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            from './rendering.js';
 import { createZoneSystem } from './biomes.js';
 import { initDNA } from './DNA.js';
+import { setBaseSeed } from './seedRandom.js';
 
 // --- simulation parameters --------------------
 
@@ -36,7 +37,7 @@ function setup() {
   cnv2.addEventListener('wheel', handleZoom, { passive: false });
 
   initInput(cnv2);
-  initDNA(seedValue);
+
 
   // UI (simple DOM vanilla, sin p5.dom)
   const $ = sel => document.querySelector(sel);
@@ -63,10 +64,13 @@ function setup() {
   });
 
   reiniciar();
+  console.log(zoneSystem.getZone(0, 0));
 }
 
 function reiniciar() {
   console.log("Reiniciando con semilla:", seedValue);
+  setBaseSeed(seedValue);
+  initDNA();
   randomSeed(seedValue);
   noiseSeed(seedValue);
   zoneSystem = initZoneSystem();
@@ -86,7 +90,7 @@ function initZoneSystem () {
   const zoneSystemParams = {
   seed: 20250828,     
 	// escala global del mapa (cuanto menor, más grandes los parches)
-  baseFreq: 0.0006, // 0.002, // mas pequeño zonas mas grandes
+  baseFreq: 0.001, // 0.002, // mas pequeño zonas mas grandes
 	// parámetros fBM del “campo de zonas”
   zoneNoise: { octaves: 5, lacunarity: 2.0, gain: 0.5 },
 	// warping para dar formas orgánicas
@@ -95,18 +99,7 @@ function initZoneSystem () {
   elevNoise: { seed: 11, octaves: 5, freq: 0.0018 },
   tempNoise: { seed: 23, octaves: 4, freq: 0.0009 },
   moistNoise: { seed: 31, octaves: 4, freq: 0.0012 },
-  // tabla de zonas por umbrales del campo principal
-  /*
-  zones: [
-    { id: 'Ocean',     max: 0.28, color: '#3a6ea5' },
-    { id: 'Coast',      max: 0.34, color: '#7fbbe3' },
-    { id: 'Meadow',    max: 0.52, color: '#77c56b' },
-    { id: 'Forest',     max: 0.68, color: '#2e8b57' },
-    { id: 'Jungle',      max: 0.82, color: '#188c4f' },
-    { id: 'Mountain',    max: 0.92, color: '#8a7f7a' },
-    { id: 'Snow',      max: 1.01, color: '#f0f4f7' }
-  ]
-    */
+  // tabla de zonas del campo principal
     zones: [
     { id: '1',     max: 0.40, color: '#3a6ea5' },
     //{ id: '2',      max: 0.34, color: '#7fbbe3' },
@@ -118,6 +111,7 @@ function initZoneSystem () {
   ]
 	} 
 	 const zs = createZoneSystem(zoneSystemParams);
+   console.log("Zone system.config:", zs.config);
    return zs;
  }
 

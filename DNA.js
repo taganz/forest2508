@@ -1,4 +1,5 @@
 import { zoneSystem } from './main.js';
+import { seedShuffle } from './seedRandom.js';
 
 const paletaVerdes_base = [
     '#6FBF73' 
@@ -41,10 +42,10 @@ const cYoffsetT = -0.5 + 1 * Math.random();
 
 
 /*=========================== DNA ===========================*/
-export function initDNA(seed=1234, pMarron = paletaMarron_base, pVerdes = paletaVerdes_base) {
-    formas = shuffle(formas_base);
-    paletaMarron = shuffle(pMarron);
-    paletaVerdes = shuffle(pVerdes);
+export function initDNA(pMarron = paletaMarron_base, pVerdes = paletaVerdes_base) {
+    formas = seedShuffle(formas_base);
+    paletaMarron = seedShuffle(pMarron);
+    paletaVerdes = seedShuffle(pVerdes);
 } 
 export class DNA {
     constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset }) {
@@ -82,27 +83,25 @@ export class DNA {
     static dnaPosition(x, y, treeDistance=150) {           
         const zone = zoneSystem.getZone(x, y);
         const zoneNum = zoneSystem.zone2Num(zone.id);
+        const numZones = zoneSystem.config.zones.length
 
         // Make crownShape change proportionally to zoneNum
         // zoneNum starts at 1, formas.length is the number of shapes
         // Map zoneNum to [0, formas.length-1]
-        const idx = Math.max(0, Math.min(formas.length - 1, Math.round((zoneNum - 1) * (formas.length - 1) / Math.max(1, 7 - 1))));
-        const crownShape = formas[idx];
+        const crownShape = DNA._selectArrayElement(formas, zoneNum, numZones);
         //const crownWidth =  cwA1 * Math.abs(Math.sin (x/cwTx + cwFx)) + cwA2 * Math.abs(Math.cos (y/cwTy + cwFy));
         const crownWidth = 40 + noise(x/300, y/300) * 150;
         //const crownHeight = chA1 * Math.abs(Math.sin (x/chTx + chFx)) + chA2 * Math.abs(Math.cos (y/chTy + chFy));
         const crownHeight = 30 + noise((x+50)/400, (y+50)/30) * 150;
-    // Make crownColor proportional to zoneNum
-    // Map zoneNum to [0, paletaVerdes.length-1]
-    const idxColor = Math.max(0, Math.min(paletaVerdes.length - 1, Math.round((zoneNum - 1) * (paletaVerdes.length - 1) / Math.max(1, 7 - 1))));
-    const crownColor = paletaVerdes[idxColor];
+        // Make crownColor proportional to zoneNum
+        // Map zoneNum to [0, paletaVerdes.length-1]
+        const crownColor = DNA._selectArrayElement(paletaVerdes, zoneNum, numZones);
         // Make trunkType dependent on zoneNum (example: even zones 'linea', odd zones 'lineaRamas')
         const trunkType = (zoneNum % 2 === 0) ? 'linea' : 'lineaRamas';
 
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);
-        const idxTrunkColor = Math.max(0, Math.min(paletaMarron.length - 1, Math.round((zoneNum - 1) * (paletaMarron.length - 1) / Math.max(1, 7 - 1))));
-        const trunkColor = paletaMarron[idxTrunkColor];
+        const trunkColor = DNA._selectArrayElement(paletaMarron, zoneNum, numZones);
         const spaceNeeded = Math.max(60, crownWidth * 1.2, trunkHeight * 0.9);
         const xoffset = treeDistance *  (1+zoneNum/30); 
         const yoffset = treeDistance *  (1+zoneNum/30); 
@@ -120,6 +119,11 @@ export class DNA {
             , xoffset: xoffset
             , yoffset: yoffset
         });
+    }
+    // select an element from an array based on the zoneNum
+    static _selectArrayElement(arr, zoneNum, numZones) {
+        const idx = Math.max(0, Math.min(arr.length - 1, Math.round((zoneNum - 1) * (arr.length - 1) / Math.max(1, numZones - 1))));
+        return arr[idx];
     }
     mutado10() {
         const nd = new DNA({ ...this });

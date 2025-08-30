@@ -29,8 +29,15 @@ Ajustes rápidos
 // <--- OJO, PICK ZONE ESTA FET A MANIJA PER LES ZONES DE L'EXEMPLE ----
 
 // -------------------- Configuración de zonas (biomas) --------------------
-// OJO, getZone torna aixo + els altres fields
-const zones_originals = [
+// es selecciona la primera zona que te el max mes petit que la z del punt i si no la ultima
+// les primeres zones derivades s'assignen a posteriori en funcio dels filds 
+const zonesDefault = [
+	// derivades
+    { id: 'Taiga',      max: -1, color: '#3d6b4b' },
+    { id: 'Savanna',    max: -1, color: '#b2c85a' },
+    { id: 'High Mountain',  max: -1, color: '#cfc6c3' },
+    { id: 'Rainforest',     max: -1, color: '#0f6e3c' },
+    { id: 'Glacier',        max: -1, color: '#e8f8ff' },
 	// basiques
     { id: 'Ocean',  max: 0.28, color: '#3a6ea5' },
     { id: 'Coast',  max: 0.34, color: '#7fbbe3' },
@@ -39,12 +46,6 @@ const zones_originals = [
     { id: 'Jungle', max: 0.82, color: '#188c4f' },
     { id: 'Mountain',   max: 0.92, color: '#8a7f7a' },
     { id: 'Snow',       max: 1.01, color: '#f0f4f7' },
-	// derivades
-    { id: 'Taiga',      max: 99, color: '#3d6b4b' },
-    { id: 'Savanna',    max: 99, color: '#b2c85a' },
-    { id: 'High Mountain',  max: 99, color: '#cfc6c3' },
-    { id: 'Rainforest',     max: 99, color: '#0f6e3c' },
-    { id: 'Glacier',        max: 99, color: '#e8f8ff' }
 ];
 
 
@@ -65,15 +66,7 @@ export function createZoneSystem({
   tempNoise = { seed: 23, octaves: 4, freq: 0.0009 },
   moistNoise= { seed: 31, octaves: 4, freq: 0.0012 },
   // tabla de zonas por umbrales del campo principal
-	zones = [
-		{ id: 'Ocean',     max: 0.28, color: '#3a6ea5' },
-		{ id: 'Coast',      max: 0.34, color: '#7fbbe3' },
-		{ id: 'Meadow',    max: 0.52, color: '#77c56b' },
-		{ id: 'Forest',     max: 0.68, color: '#2e8b57' },
-		{ id: 'Jungle',      max: 0.82, color: '#188c4f' },
-		{ id: 'Mountain',    max: 0.92, color: '#8a7f7a' },
-		{ id: 'Snow',      max: 1.01, color: '#f0f4f7' }
-	]
+	zones = zonesDefault
 	} = {}) {
 
 	// opcional: cache por chunks para acelerar consultas masivas
@@ -86,9 +79,6 @@ export function createZoneSystem({
 		const idx = zoneIds.indexOf(id);
 		return idx === -1 ? 0 : idx + 1;
 	};
-	console.log("Creating zone system");
-    console.log("zones:", zones);
-
 
 	function sampleFields(x, y) {
 			// 1) domain warp de las coords
@@ -116,6 +106,8 @@ export function createZoneSystem({
 		let baseZone = zones.find(z => zVal <= z.max) || zones[zones.length - 1];
 		let id = baseZone.id;
 		let color = baseZone.color;
+
+		// <---- LA PART DE LES VARIACIONS HAURIA DE PASSAR-SE COM UNA FUNCIO PARAMETRE PERQUE DEPEN DE LES ZONES QUE HEM PASSAT. NO HAURIA D'ESTAR AQUI.
 
 		// ejemplos de variaciones (totalmente opcionales):
 		if (id === 'Forest' && temp < 0.35) { id = 'Taiga'; color = '#3d6b4b'; }

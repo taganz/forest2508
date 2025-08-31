@@ -15,6 +15,15 @@ const treeDistance = 150 + 20 * Math.random();  // 150
 const treePosXVariation = 0.6;
 let seedValue = Math.floor(Math.random()*1e9);
 let frameRateVal = 60;
+const zonesDefault = [
+    { id: '1',     max: 0.40, color: '#3a6ea5' },
+    //{ id: '2',      max: 0.34, color: '#7fbbe3' },
+    { id: '3',    max: 0.60, color: '#77c56b' },
+    //{ id: '4',     max: 0.68, color: '#2e8b57' },
+    { id: '5',      max: 0.75, color: '#188c4f' },
+    //{ id: '6',    max: 0.92, color: '#8a7f7a' },
+    { id: '7',      max: 1.01, color: '#f0f4f7' }
+  ]
 
 //-------------------------------------------------
 
@@ -100,15 +109,7 @@ function initZoneSystem () {
   tempNoise: { seed: 23, octaves: 4, freq: 0.0009 },
   moistNoise: { seed: 31, octaves: 4, freq: 0.0012 },
   // tabla de zonas del campo principal
-    zones: [
-    { id: '1',     max: 0.40, color: '#3a6ea5' },
-    //{ id: '2',      max: 0.34, color: '#7fbbe3' },
-    { id: '3',    max: 0.60, color: '#77c56b' },
-    //{ id: '4',     max: 0.68, color: '#2e8b57' },
-    { id: '5',      max: 0.75, color: '#188c4f' },
-    //{ id: '6',    max: 0.92, color: '#8a7f7a' },
-    { id: '7',      max: 1.01, color: '#f0f4f7' }
-  ]
+    zones: zonesDefault
 	} 
 	 const zs = createZoneSystem(zoneSystemParams);
    console.log("Zone system.config:", zs.config);

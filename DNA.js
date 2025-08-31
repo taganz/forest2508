@@ -48,7 +48,7 @@ export function initDNA(pMarron = paletaMarron_base, pVerdes = paletaVerdes_base
     paletaVerdes = seedShuffle(pVerdes);
 } 
 export class DNA {
-    constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset }) {
+    constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset, zone, zoneNum }) {
         this.crownShape = crownShape;
         this.crownHeight = crownHeight;
         this.crownWidth = crownWidth;
@@ -60,30 +60,13 @@ export class DNA {
         this.spaceNeeded = spaceNeeded;
         this.xoffset = xoffset;
         this.yoffset = yoffset;
-    }
-    static aleatorio() {
-        const crownWidth = random(28, 80);
-        const crownHeight = random(30, 120);
-        const trunkWidth = random(4, 14);
-        const trunkHeight = random(30, 90);
-        const spaceNeeded = max(60, crownWidth * 1.2, trunkHeight * 0.9);
-        return new DNA({
-            crownShape: random(formas),
-            crownHeight, crownWidth,
-            crownColor: random(paletaVerdes),
-            trunkType: random(['linea', 'lineaRamas']),
-            trunkHeight, trunkWidth,
-            trunkColor: random(paletaMarron),
-            spaceNeeded,
-            xoffset: cXoffsetT,
-            yoffset: cYoffsetT
-        });
-
+        this.zone = zone;
+        this.zoneNum = zoneNum;
     }
     static dnaPosition(x, y, treeDistance=150) {           
         const zone = zoneSystem.getZone(x, y);
         const zoneNum = zoneSystem.zone2Num(zone.id);
-        const numZones = zoneSystem.config.zones.length
+        const numZones = zoneSystem.config.zones.length;
 
         // Make crownShape change proportionally to zoneNum
         // zoneNum starts at 1, formas.length is the number of shapes
@@ -118,6 +101,8 @@ export class DNA {
             , spaceNeeded : spaceNeeded
             , xoffset: xoffset
             , yoffset: yoffset
+            , zone: zone
+            , zoneNum: zoneNum
         });
     }
     // select an element from an array based on the zoneNum

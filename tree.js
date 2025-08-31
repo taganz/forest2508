@@ -1,8 +1,6 @@
 
 
-import { DNA } from "./DNA.js";
 import { debugShowBoundingBox } from "./main.js";
-import { zoneSystem } from "./main.js";
 
 /*=========================== TREE ===========================
 
@@ -30,13 +28,9 @@ export class Tree {
         // world coordinates
         this.x = wx + dna.xoffset; 
         this.y = wy + dna.yoffset; 
-        if (dna == null) {
-            this.dna = DNA.aleatorio(wx, wy);
-        } else {
-            this.dna = dna;
-        }
-        this.zone = zoneSystem.getZone(this.x, this.y);
-        this.zoneNum = zoneSystem.zone2Num(this.zone.id);
+        this.dna = dna;
+        this.zone = dna.zone;
+        this.zoneNum = dna.zoneNum;
         const c = this.zone.color;
         const alpha = 200; // Ajusta de 0 a 255 según la transparencia deseada
         this.zoneColor = color(red(c) * 0.7, green(c) * 0.7, blue(c) * 0.7, alpha);

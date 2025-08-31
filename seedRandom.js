@@ -11,6 +11,13 @@ let baseSeed = 1234;
 
 export function setBaseSeed(seed) {
   baseSeed = seed;
+  console.log("Base seed set to: ", baseSeed);
+
+}
+
+export function randomize() {
+  baseSeed = Math.floor(Math.random() * 10000);
+  console.log("Base seed randomized to: ", baseSeed);
 }
 
 export function seedRandom(seed=baseSeed) {

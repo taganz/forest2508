@@ -118,64 +118,109 @@ export class Tree {
 
         if (debugHideTrees) return;
 
-        // Tronco
-        push();
-        stroke(d.trunkColor); strokeWeight(d.trunkWidth); strokeCap(ROUND);
-        line(x, y, x, y + d.trunkHeight);
-        if (d.trunkType === 'lineaRamas') {
-            const rama = min(24, d.trunkHeight * 0.35);
-            const y1 = y + d.trunkHeight * 0.4;
-            const y2 = y + d.trunkHeight * 0.7;
-            const a = PI / 6;
-            line(x, y1, x - rama * cos(a), y1 + rama * sin(a));
-            line(x, y2, x + rama * cos(a), y2 + rama * sin(a));
+        switch(d.trunkType) {
+            case 'linea':
+                _drawTrunkLinea(x, y, d.trunkHeight, d.trunkWidth, d.trunkColor);
+                break;
+            case 'lineaRamas':
+                _drawTrunkLineaRamas(x, y, d.trunkHeight, d.trunkWidth, d.trunkColor);
+                break;
+            default:
+                _drawTrunkLinea(x, y, d.trunkHeight, d.trunkWidth, d.trunkColor);
+                console.log("Invalid trunk type ", d.trunkType);
         }
-        pop();
 
-        // Copa con sombra derecha
-        const leftColor = color(d.crownColor);
-        const rightColor = color(red(leftColor) * 0.7, green(leftColor) * 0.7, blue(leftColor) * 0.7);
-        const cx = x, cy = y + d.trunkHeight + d.crownHeight * 0.5;
         switch (d.crownShape) {
             case 'triangulo':
-                // Izquierda
-                push(); noStroke(); fill(leftColor);
-                beginShape();
-                vertex(cx, y + d.trunkHeight + d.crownHeight);
-                vertex(cx - d.crownWidth / 2, y + d.trunkHeight);
-                vertex(cx, y + d.trunkHeight);
-                endShape(CLOSE);
-                pop();
-                // Derecha
-                push(); noStroke(); fill(rightColor);
-                beginShape();
-                vertex(cx, y + d.trunkHeight + d.crownHeight);
-                vertex(cx, y + d.trunkHeight);
-                vertex(cx + d.crownWidth / 2, y + d.trunkHeight);
-                endShape(CLOSE);
-                pop();
+                _drawCrownTriangle(x, y, d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
                 break;
             case 'circulo':
-                // Izquierda
-                push(); noStroke(); fill(leftColor);
-                arc(cx, cy, (d.crownWidth + d.crownHeight) * 0.5, (d.crownWidth + d.crownHeight) * 0.5, HALF_PI, 3 * HALF_PI, PIE);
-                pop();
-                // Derecha
-                push(); noStroke(); fill(rightColor);
-                arc(cx, cy, (d.crownWidth + d.crownHeight) * 0.5, (d.crownWidth + d.crownHeight) * 0.5, 3 * HALF_PI, HALF_PI, PIE);
-                pop();
+                _drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
                 break;
+
             case 'elipse':
-                // Izquierda
-                push(); noStroke(); fill(leftColor);
-                arc(cx, cy, d.crownWidth, d.crownHeight, HALF_PI, 3 * HALF_PI, PIE);
-                pop();
-                // Derecha
-                push(); noStroke(); fill(rightColor);
-                arc(cx, cy, d.crownWidth, d.crownHeight, 3 * HALF_PI, HALF_PI, PIE);
-                pop();
+                _drawCrownEllipse(x, y, d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
                 break;
+            default:
+                _drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
+                console.log("Invalid crown shape ", d.crownShape);
+
         }
     }
 
+}
+
+
+
+function _drawTrunkLinea(x, y, trunkHeight, trunkWidth, trunkColor) {
+    push();
+    stroke(trunkColor);
+    strokeWeight(trunkWidth);
+    line(x, y, x, y + trunkHeight);
+    pop();
+}
+
+
+function _drawTrunkLineaRamas(x, y, trunkHeight, trunkWidth, trunkColor) {
+    push();
+    stroke(trunkColor);
+    strokeWeight(trunkWidth);
+    line(x, y, x, y + trunkHeight);
+    const rama = min(24, trunkHeight * 0.35);
+    const y1 = y + trunkHeight * 0.4;
+    const y2 = y + trunkHeight * 0.7;
+    const a = PI / 6;
+    line(x, y1, x - rama * cos(a), y1 + rama * sin(a));
+    line(x, y2, x + rama * cos(a), y2 + rama * sin(a));
+    pop();
+}
+
+function _drawCrownTriangle(x, y, trunkHeight, crownWidth, crownHeight, crownColor) {
+    const leftColor = color(crownColor);
+    const rightColor = color(red(leftColor) * 0.7, green(leftColor) * 0.7, blue(leftColor) * 0.7);
+    // Izquierda
+    push(); noStroke(); fill(leftColor);
+    beginShape();
+    vertex(x, y + trunkHeight + crownHeight);
+    vertex(x - crownWidth / 2, y + trunkHeight);
+    vertex(x, y + trunkHeight);
+    endShape(CLOSE);
+    pop();
+
+    // Derecha
+    push(); noStroke(); fill(rightColor);
+    beginShape();
+    vertex(x, y + trunkHeight + crownHeight);
+    vertex(x, y + trunkHeight);
+    vertex(x + crownWidth / 2, y + trunkHeight);
+    endShape(CLOSE);
+    pop();
+}
+
+function _drawCrownCircle(cx, y, trunkHeight,crownWidth, crownHeight, crownColor) {
+    const  cy = y + trunkHeight + crownHeight * 0.5;
+    const leftColor = color(crownColor);
+    const rightColor = color(red(leftColor) * 0.7, green(leftColor) * 0.7, blue(leftColor) * 0.7);
+    // Izquierda
+    push(); noStroke(); fill(leftColor);
+    arc(cx, cy, (crownWidth + crownHeight) * 0.5, (crownWidth + crownHeight) * 0.5, HALF_PI, 3 * HALF_PI, PIE);
+    pop();
+    // Derecha
+    push(); noStroke(); fill(rightColor);
+    arc(cx, cy, (crownWidth + crownHeight) * 0.5, (crownWidth + crownHeight) * 0.5, 3 * HALF_PI, HALF_PI, PIE);
+    pop();
+}
+
+function _drawCrownEllipse(cx, y, trunkHeight, crownWidth, crownHeight, crownColor) {
+    const  cy = y + trunkHeight + crownHeight * 0.5;
+    const leftColor = color(crownColor);
+    const rightColor = color(red(leftColor) * 0.7, green(leftColor) * 0.7, blue(leftColor) * 0.7);
+    // Izquierda
+    push(); noStroke(); fill(leftColor);
+    arc(cx, cy, crownWidth, crownHeight, HALF_PI, 3 * HALF_PI, PIE);
+    pop();
+    // Derecha
+    push(); noStroke(); fill(rightColor);
+    arc(cx, cy, crownWidth, crownHeight, 3 * HALF_PI, HALF_PI, PIE);
+    pop();
 }

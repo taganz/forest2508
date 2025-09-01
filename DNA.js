@@ -17,7 +17,8 @@ const paletaMarron_base = [
 ];
 
 const formas_base = ['triangulo', 'circulo', 'elipse'];
-let formas;
+const trunkTypesBase = ['linea', 'lineaRamas'];  // <-- de moment presuposa que n'hi ha dos
+let formas, trunkTypes;
 let paletaMarron, paletaVerdes;
 
 
@@ -44,6 +45,7 @@ const cYoffsetT = -0.5 + 1 * Math.random();
 /*=========================== DNA ===========================*/
 export function initDNA(pMarron = paletaMarron_base, pVerdes = paletaVerdes_base) {
     formas = seedShuffle(formas_base);
+    trunkTypes = seedShuffle(trunkTypesBase);
     paletaMarron = seedShuffle(pMarron);
     paletaVerdes = seedShuffle(pVerdes);
 } 
@@ -66,7 +68,7 @@ export class DNA {
     static dnaPosition(x, y, treeDistance=150) {           
         const zone = zoneSystem.getZone(x, y);
         const zoneNum = zoneSystem.zone2Num(zone.id);
-        const numZones = zoneSystem.config.zones.length;
+        const numZones = zoneSystem.config.zones.length
 
         // Make crownShape change proportionally to zoneNum
         // zoneNum starts at 1, formas.length is the number of shapes
@@ -80,7 +82,7 @@ export class DNA {
         // Map zoneNum to [0, paletaVerdes.length-1]
         const crownColor = DNA._selectArrayElement(paletaVerdes, zoneNum, numZones);
         // Make trunkType dependent on zoneNum (example: even zones 'linea', odd zones 'lineaRamas')
-        const trunkType = (zoneNum % 2 === 0) ? 'linea' : 'lineaRamas';
+        const trunkType = (zoneNum % 2 === 0) ? trunkTypes[0] : trunkTypes[1];
 
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);

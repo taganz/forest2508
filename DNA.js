@@ -95,10 +95,10 @@ export class DNA {
         // Map zoneNum to [0, paletaVerdes.length-1]
         const crownColor = selectArrayElement(paletaVerdes, zoneNum, numZones);
         // Make trunkType dependent on zoneNum (example: even zones 'linea', odd zones 'lineaRamas')
-        const crownOffsetW1 = -0.15 + 2 * random() * 0.15;
-        const crownOffsetH1 = -0.15 + 2 * random() * 0.15;
-        const crownOffsetW2 = -0.15 + 2 * random() * 0.15;
-        const crownOffsetH2 = -0.15 + 2 * random() * 0.15;
+        const crownOffsetW1 = -0.15 + 2 * noise(x,y) * 0.15;
+        const crownOffsetH1 = -0.15 + 2 * noise(x,y) * 0.15;
+        const crownOffsetW2 = -0.15 + 2 * noise(x,y) * 0.15;
+        const crownOffsetH2 = -0.15 + 2 * noise(x,y) * 0.15;
         const trunkType = (zoneNum % 2 === 0) ? trunkTypes[0] : trunkTypes[1];
 
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);

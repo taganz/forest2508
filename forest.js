@@ -8,18 +8,15 @@
 */
 import { Tree } from './tree.js';
 import { DNA } from './DNA.js';
-import { viewScale, worldToScreenX, worldToScreenY} from './camera.js';
-import { random } from './seedRandom.js';
+import { worldToScreenX, worldToScreenY} from './camera.js';
 
 export class Forest {
     constructor(treeDistance, treePosXVariation, initialForestSize = 1) {
         this.arboles = [];
         this.treeDistance = treeDistance;
         this.treePosXVariation = treePosXVariation;
-        //this._addTreeArea(initialForestSize);
     }
 
-   
 
     // Dibuja una cuadrícula de árboles generando el DNA para cada posición visible
     // No fa servir els arbres guardats, nomes la posició

@@ -4,7 +4,7 @@ import { initInput, keyPressed, keyReleased, handleZoom, mouseMoved } from './in
 import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            from './rendering.js';
 import { createZoneSystem } from './biomes.js';
 import { initDNA } from './DNA.js';
-import { setBaseSeed } from './seedRandom.js';
+import { random, randomize } from './seedRandom.js';
 
 // --- simulation parameters --------------------
 
@@ -13,7 +13,7 @@ const initialForestSize = 1; // tamaño inicial del bosque como multiplicador de
 export const debugShowBoundingBox = false;
 const treeDistance = 150 + 20 * Math.random();  // 150
 const treePosXVariation = 0.6;
-let seedValue = Math.floor(Math.random()*1e9);
+export let seedValue = Math.floor(Math.random()*1e9);
 let frameRateVal = 60;
 const zonesDefault = [
     { id: '1',     max: 0.40, color: '#3a6ea5' },
@@ -78,15 +78,15 @@ function setup() {
 
 function reiniciar() {
   console.log("Reiniciando con semilla:", seedValue);
-  setBaseSeed(seedValue);
+  randomize(seedValue);
   initDNA();
-  randomSeed(seedValue);
   noiseSeed(seedValue);
   zoneSystem = initZoneSystem();
 
   bosque = new Forest(treeDistance, treePosXVariation);
   //bosque.firstTree(); 
   bosque.addTreeArea(initialForestSize);
+  console.log('dna sample:', bosque.arboles[0].dna)
     
   // Crea exactamente dos hijos (derecha y abajo), tal como pides:
   //bosque.crearHijosPrimeros();
@@ -125,3 +125,4 @@ window.windowResized  = windowResized;
 window.keyPressed   = keyPressed;
 window.keyReleased  = keyReleased;
 window.mouseMoved   = mouseMoved;
+

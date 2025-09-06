@@ -1,5 +1,6 @@
 import { zoneSystem } from './main.js';
-import { seedShuffle } from './seedRandom.js';
+import { random, shuffle } from './seedRandom.js';
+import { selectArrayElement } from './util.js'
 
 const paletaVerdes_base = [
     '#6FBF73' 
@@ -16,7 +17,15 @@ const paletaMarron_base = [
     '#A97142', '#5D3A1A'
 ];
 
-const formas_base = ['triangulo', 'circulo', 'elipse'];
+//const formas_base = ['triangulo', 'circulo', 'elipse', 'fir'];
+//const crownWidth0 = 40; 
+//const crownHeight0 = 30;
+
+const formas_base = ['circulo'];
+const crownWidth0 = 40; 
+const crownHeight0 = 50;
+
+
 const trunkTypesBase = ['linea', 'lineaRamas'];  // <-- de moment presuposa que n'hi ha dos
 let formas, trunkTypes;
 let paletaMarron, paletaVerdes;
@@ -44,17 +53,21 @@ const cYoffsetT = -0.5 + 1 * Math.random();
 
 /*=========================== DNA ===========================*/
 export function initDNA(pMarron = paletaMarron_base, pVerdes = paletaVerdes_base) {
-    formas = seedShuffle(formas_base);
-    trunkTypes = seedShuffle(trunkTypesBase);
-    paletaMarron = seedShuffle(pMarron);
-    paletaVerdes = seedShuffle(pVerdes);
+    formas = shuffle(formas_base);
+    trunkTypes = shuffle(trunkTypesBase);
+    paletaMarron = shuffle(pMarron);
+    paletaVerdes = shuffle(pVerdes);
 } 
 export class DNA {
-    constructor({ crownShape, crownHeight, crownWidth, crownColor, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset, zone, zoneNum }) {
+    constructor({ crownShape, crownHeight, crownWidth, crownColor, crownOffsetW1, crownOffsetH1, crownOffsetW2, crownOffsetH2, trunkType, trunkHeight, trunkWidth, trunkColor, spaceNeeded, xoffset, yoffset, zone, zoneNum }) {
         this.crownShape = crownShape;
         this.crownHeight = crownHeight;
         this.crownWidth = crownWidth;
         this.crownColor = crownColor;
+        this.crownOffsetW1 = crownOffsetW1;
+        this.crownOffsetH1 = crownOffsetH1;
+        this.crownOffsetW2 = crownOffsetW2;
+        this.crownOffsetH2 = crownOffsetH2;
         this.trunkType = trunkType;
         this.trunkHeight = trunkHeight;
         this.trunkWidth = trunkWidth;
@@ -73,20 +86,24 @@ export class DNA {
         // Make crownShape change proportionally to zoneNum
         // zoneNum starts at 1, formas.length is the number of shapes
         // Map zoneNum to [0, formas.length-1]
-        const crownShape = DNA._selectArrayElement(formas, zoneNum, numZones);
+        const crownShape = selectArrayElement(formas, zoneNum, numZones);
         //const crownWidth =  cwA1 * Math.abs(Math.sin (x/cwTx + cwFx)) + cwA2 * Math.abs(Math.cos (y/cwTy + cwFy));
-        const crownWidth = 40 + noise(x/300, y/300) * 150;
+        const crownWidth = crownWidth0 + noise(x/300, y/300) * 150;
         //const crownHeight = chA1 * Math.abs(Math.sin (x/chTx + chFx)) + chA2 * Math.abs(Math.cos (y/chTy + chFy));
-        const crownHeight = 30 + noise((x+50)/400, (y+50)/30) * 150;
+        const crownHeight = crownHeight0 + noise((x+50)/400, (y+50)/30) * 150;
         // Make crownColor proportional to zoneNum
         // Map zoneNum to [0, paletaVerdes.length-1]
-        const crownColor = DNA._selectArrayElement(paletaVerdes, zoneNum, numZones);
+        const crownColor = selectArrayElement(paletaVerdes, zoneNum, numZones);
         // Make trunkType dependent on zoneNum (example: even zones 'linea', odd zones 'lineaRamas')
+        const crownOffsetW1 = random()*(-0.15, 0.15);
+        const crownOffsetH1 = random()*(-0.15, 0.15); 
+        const crownOffsetW2 = random()*(-0.15, 0.15);
+        const crownOffsetH2 = random()*(-0.15, 0.15); 
         const trunkType = (zoneNum % 2 === 0) ? trunkTypes[0] : trunkTypes[1];
 
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);
-        const trunkColor = DNA._selectArrayElement(paletaMarron, zoneNum, numZones);
+        const trunkColor = selectArrayElement(paletaMarron, zoneNum, numZones);
         const spaceNeeded = Math.max(60, crownWidth * 1.2, trunkHeight * 0.9);
         const xoffset = treeDistance *  (1+zoneNum/30); 
         const yoffset = treeDistance *  (1+zoneNum/30); 
@@ -96,6 +113,10 @@ export class DNA {
             , crownWidth : crownWidth  
             , crownHeight : crownHeight 
             , crownColor : crownColor
+            , crownOffsetW1 : crownOffsetW1
+            , crownOffsetH1 : crownOffsetH1
+            , crownOffsetW2 : crownOffsetW2
+            , crownOffsetH2 : crownOffsetH2
             , trunkType : trunkType
             , trunkHeight : trunkHeight
             , trunkWidth : trunkWidth

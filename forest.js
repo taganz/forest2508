@@ -8,8 +8,9 @@
 */
 import { Tree } from './tree.js';
 import { DNA } from './DNA.js';
-import { debugShowBoundingBox, zoneSystem } from './main.js';
+import { debugShowBoundingBox } from './main.js';
 import {worldToScreenX, worldToScreenY} from './camera.js';
+import { random } from './seedRandom.js';
 
 export class Forest {
     constructor(treeDistance, treePosXVariation) {

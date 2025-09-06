@@ -204,3 +204,8 @@ export function logCursorPosition() {
   const zone = zoneSystem.getZone(screenToWorldX(mouseX), screenToWorldY(mouseY)) ;
   console.log(`Zone: ${zone.id}`);
 }
+
+export function selectArrayElement(arr, index, maxId) {
+        const idx = Math.max(0, Math.min(arr.length - 1, Math.round((index - 1) * (arr.length - 1) / Math.max(1, maxId - 1))));
+        return arr[idx];
+}

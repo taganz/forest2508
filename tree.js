@@ -1,6 +1,9 @@
 
 
+
 import { debugShowBoundingBox } from "./main.js";
+import { selectArrayElement } from "./util.js";
+import { zoneSystem } from "./main.js";
 
 /*=========================== TREE ===========================
 
@@ -29,7 +32,7 @@ export class Tree {
         this.x = wx + dna.xoffset; 
         this.y = wy + dna.yoffset; 
         this.dna = dna;
-        this.zone = dna.zone;
+        this.zone = dna.zone;   // <-- per que ho guardo si ja ho tinc a dna.zone?
         this.zoneNum = dna.zoneNum;
         const c = this.zone.color;
         const alpha = 200; // Ajusta de 0 a 255 según la transparencia deseada
@@ -135,11 +138,14 @@ export class Tree {
                 _drawCrownTriangle(x, y, d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
                 break;
             case 'circulo':
-                _drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
+                //_drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
+                _drawCrownWatercolor(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor, d);
                 break;
-
             case 'elipse':
                 _drawCrownEllipse(x, y, d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
+                break;
+            case 'fir':
+                _drawCrownFir(x, y, d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
                 break;
             default:
                 _drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
@@ -222,5 +228,70 @@ function _drawCrownEllipse(cx, y, trunkHeight, crownWidth, crownHeight, crownCol
     // Derecha
     push(); noStroke(); fill(rightColor);
     arc(cx, cy, crownWidth, crownHeight, 3 * HALF_PI, HALF_PI, PIE);
+    pop();
+}
+
+// Dibuja una copa de abeto (fir) con tres triángulos apilados y distintos tonos de verde
+function _drawCrownFir(x, y, trunkHeight, crownWidth, crownHeight, crownColor) {
+    // Generar tres tonos de verde a partir del color base
+    const base = color(crownColor);
+    const colorBot = lerpColor(base, color(0, 80, 0), 0.2);
+    const colorMid = lerpColor(base, color(0, 120, 0), 0.4);
+    const colorTop = lerpColor(base, color(0, 160, 0), 0.6);
+
+    // El triángulo más bajo es el más ancho, el más alto el más estrecho
+    const w = crownWidth;
+    // y0 es la altura de la base del triángulo respecto a y, h es la altura del punto superior respecto a y0
+    const levels = [
+        { y0: y + trunkHeight + crownHeight * (-0.1), h: crownHeight * 0.7,   w: crownWidth,        c: colorBot }, // abajo, más ancho
+        { y0: y + trunkHeight + crownHeight * 0.25,   h: crownHeight * 0.5,  w: crownWidth * 0.7,  c: colorMid }, // medio
+        { y0: y + trunkHeight + crownHeight * 0.5,    h: crownHeight * 0.5,  w: crownWidth * 0.5,  c: colorTop }  // arriba, más estrecho
+    ];
+
+    for (const lvl of levels) {
+        push(); noStroke(); fill(lvl.c);
+        beginShape();
+        vertex(x, lvl.y0 + lvl.h);
+        vertex(x - lvl.w / 2, lvl.y0);
+        vertex(x + lvl.w / 2, lvl.y0);
+        endShape(CLOSE);
+        pop();
+    }
+}
+
+function _drawCrownWatercolor(x, y, trunkHeight, crownWidth, crownHeight, crownColor, dna) {
+    let warmAnchor = "#e89623";
+    let coldAnchor = "#0ef0ec";
+    let redAnchor = "##f50511";
+    let blueAnchor = "#0c1ae8";
+    push();
+    noStroke();
+    let base = color(crownColor);
+    let r = red(base), g = green(base), b = blue(base);
+    base = color(r, g, b, 128);
+    let temperatureAnchor = selectArrayElement([coldAnchor, warmAnchor, redAnchor, blueAnchor], dna.zoneNum, zoneSystem.config.zones.length);
+    let temperatureNumber = 0.2;  // <----------------------- ajustar de 0 a 1 random?
+    base = lerpColor(base, temperatureAnchor, temperatureNumber);
+    let crownColors = [
+        lerpColor(base, color(0), 0.1),
+        lerpColor(base, color(0), 0),
+        lerpColor(base, color(0), 0.2),
+    ]
+
+    let crownOffsets = [
+        { dx: 0, dy: 0 },
+        { dx: crownWidth * dna.crownOffsetW1, dy: crownHeight * dna.crownOffsetH1 },
+        { dx: crownWidth * dna.crownOffsetW2, dy: crownHeight * dna.crownOffsetH2 }
+    ];
+
+    for (let i = 0; i < 3; i++) {
+        fill(crownColors[i]);									// variacio color
+        ellipse(
+            x + crownOffsets[i].dx,								// desplaçat offset
+            y + trunkHeight + crownHeight/2 + crownOffsets[i].dy,				// a sobre el tronc i desplaçat offset
+            crownWidth, // <-- falta random						// variacio tamany corona
+            crownHeight // <-- falta random,
+        );
+    }
     pop();
 }

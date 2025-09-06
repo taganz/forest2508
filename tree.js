@@ -39,62 +39,7 @@ export class Tree {
         this.zoneColor = color(red(c) * 0.7, green(c) * 0.7, blue(c) * 0.7, alpha);
     }
 
-    hijoDNA() { 
-        return this.dna.mutado10();
-     }
 
-     
-    // Devuelve el bounding box del árbol en formato {x1, y1, x2, y2}
-    // --> es podria calcular en constructor
-    boundingBox() {
-        const d = this.dna;
-        // El tronco va de (x, y) a (x, y + d.trunkHeight)
-        // La copa puede sobresalir por los lados y arriba/abajo según la forma
-        // Consideramos el rectángulo que contiene todo: tronco + copa
-        // Suponemos que la copa está centrada en x, encima del tronco
-        const x1 = this.x - d.crownWidth / 2;
-        const x2 = this.x + d.crownWidth / 2;
-        const y1 = this.y;
-        // El punto más bajo es el fondo de la copa
-        const y2 = this.y + d.trunkHeight + d.crownHeight;
-        return { x1, y1, x2, y2 };
-
-            /* per afegir les copes etc mirar aixo
-                // 1) Calculamos el bounding box de TODOS los árboles (incluye copa y tronco)
-                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-
-                for (const t of forest.arboles) {
-                    const d = t.dna;
-
-                    // Anchura efectiva: copa manda (y un poco de tronco)
-                    const halfWidth = Math.max(d.crownWidth * 0.6, d.trunkWidth * 0.5);
-
-                    const left   = t.x - halfWidth;
-                    const right  = t.x + halfWidth;
-                    const top    = t.y - d.trunkHeight - d.crownHeight; // vértice superior de la copa
-                    const bottom = t.y;                                  // base del tronco
-
-                    minX = Math.min(minX, left);
-                    maxX = Math.max(maxX, right);
-                    minY = Math.min(minY, top);
-                    maxY = Math.max(maxY, bottom);
-                }
-
-                //console.log(`minX ${minX} maxX ${maxX} minY ${minY} maxY ${maxY} `);
-                //console.log(forest);
-
-                // 2) Sin clamp a 0/width/height: permitimos negativos
-                minX -= padding; maxX += padding;
-                minY -= padding; maxY += padding;
-
-                // 3) Ajustamos a múltiplos de la rejilla para que "encaje"
-                const startX = Math.floor(minX / stepX) * stepX;
-                const endX   = Math.ceil (maxX / stepX) * stepX;
-                const startY = Math.floor(minY / stepY) * stepY;
-                const endY   = Math.ceil (maxY / stepY) * stepY;
-                */
-
-    }
 
     // dibuixa en world coordinates, cal fer applyCamera() abans
     draw() { 
@@ -138,7 +83,9 @@ export class Tree {
                 _drawCrownTriangle(x, y, d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
                 break;
             case 'circulo':
-                //_drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
+                _drawCrownCircle(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor);
+                break;
+            case 'watercolor':
                 _drawCrownWatercolor(x, y,  d.trunkHeight, d.crownWidth, d.crownHeight, d.crownColor, d);
                 break;
             case 'elipse':

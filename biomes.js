@@ -54,7 +54,7 @@ const zonesDefault = [
 
 
 export function createZoneSystem({
-  seed = 20250828,
+  seed = 20250828,  // <-- aquest seed no se per a que serveix
   // escala global del mapa (cuanto menor, más grandes los parches)
   baseFreq = 0.002,
   // parámetros fBM del “campo de zonas”

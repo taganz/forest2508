@@ -8,11 +8,11 @@ import { random, randomize } from './seedRandom.js';
 
 // --- simulation parameters --------------------
 
-const initialForestSize = 1; // tamaño inicial del bosque como multiplicador de factor de separacion entre arboles (esta en forest de momento).
+const initialForestSize = 10; // tamaño inicial del bosque como multiplicador de factor de separacion entre arboles (esta en forest de momento).
                               // si no faig servir la funcio draw de forest no cal generar arbres
 export const debugShowBoundingBox = false;
 const treeDistance = 150 + 20 * Math.random();  // 150
-const treePosXVariation = 0.6;
+const treePosXVariation = 0.5;
 export let seedValue = Math.floor(Math.random()*1e9);
 let frameRateVal = 60;
 const zonesDefault = [
@@ -79,19 +79,10 @@ function setup() {
 function reiniciar() {
   console.log("Reiniciando con semilla:", seedValue);
   randomize(seedValue);
-  initDNA();
   noiseSeed(seedValue);
-  zoneSystem = initZoneSystem();
-
-  bosque = new Forest(treeDistance, treePosXVariation);
-  //bosque.firstTree(); 
-  bosque.addTreeArea(initialForestSize);
-  console.log('dna sample:', bosque.arboles[0].dna)
-    
-  // Crea exactamente dos hijos (derecha y abajo), tal como pides:
-  //bosque.crearHijosPrimeros();
-  // Si quieres que el bosque siga creciendo por generaciones, descomenta:
-  //bosque.crecerPorGeneraciones(3); // p.ej. 3 generaciones
+  initDNA();
+  zoneSystem = initZoneSystem(seedValue);
+  bosque = new Forest(treeDistance, treePosXVariation, initialForestSize);
   resetCanvas();
 }
 

@@ -21,9 +21,9 @@ const paletaMarron_base = [
 //const crownWidth0 = 40; 
 //const crownHeight0 = 30;
 
-const formas_base = ['circulo'];
-const crownWidth0 = 40; 
-const crownHeight0 = 50;
+const formas_base = ['watercolor'];
+const crownWidth0 = 30; 
+const crownHeight0 = 40;
 
 
 const trunkTypesBase = ['linea', 'lineaRamas'];  // <-- de moment presuposa que n'hi ha dos
@@ -78,7 +78,7 @@ export class DNA {
         this.zone = zone;
         this.zoneNum = zoneNum;
     }
-    static dnaPosition(x, y, treeDistance=150) {           
+    static dnaPosition(x, y, treeDistance, treePosXVariation) {           
         const zone = zoneSystem.getZone(x, y);
         const zoneNum = zoneSystem.zone2Num(zone.id);
         const numZones = zoneSystem.config.zones.length
@@ -95,18 +95,19 @@ export class DNA {
         // Map zoneNum to [0, paletaVerdes.length-1]
         const crownColor = selectArrayElement(paletaVerdes, zoneNum, numZones);
         // Make trunkType dependent on zoneNum (example: even zones 'linea', odd zones 'lineaRamas')
-        const crownOffsetW1 = random()*(-0.15, 0.15);
-        const crownOffsetH1 = random()*(-0.15, 0.15); 
-        const crownOffsetW2 = random()*(-0.15, 0.15);
-        const crownOffsetH2 = random()*(-0.15, 0.15); 
+        const crownOffsetW1 = -0.15 + 2 * random() * 0.15;
+        const crownOffsetH1 = -0.15 + 2 * random() * 0.15;
+        const crownOffsetW2 = -0.15 + 2 * random() * 0.15;
+        const crownOffsetH2 = -0.15 + 2 * random() * 0.15;
         const trunkType = (zoneNum % 2 === 0) ? trunkTypes[0] : trunkTypes[1];
 
         const trunkWidth = 10; // 4 + 4 +  14 * sin (x/1000 + Math.PI/2) * cos (y/1000 + Math.PI/2);
         const trunkHeight = 45; // 30 + 30 + 90 * sin (x/1000 + Math.PI/3) * cos (y/1000 + Math.PI/3);
         const trunkColor = selectArrayElement(paletaMarron, zoneNum, numZones);
         const spaceNeeded = Math.max(60, crownWidth * 1.2, trunkHeight * 0.9);
-        const xoffset = treeDistance *  (1+zoneNum/30); 
-        const yoffset = treeDistance *  (1+zoneNum/30); 
+        const xoffset = treeDistance *  (- 1 + 2 * noise(x,y)) * treePosXVariation;  
+        const yoffset = treeDistance *  (- 1 + 2 * noise(x,y)) * treePosXVariation; 
+
 
         return new DNA({
             crownShape : crownShape
@@ -128,34 +129,5 @@ export class DNA {
             , zoneNum: zoneNum
         });
     }
-    // select an element from an array based on the zoneNum
-    static _selectArrayElement(arr, zoneNum, numZones) {
-        const idx = Math.max(0, Math.min(arr.length - 1, Math.round((zoneNum - 1) * (arr.length - 1) / Math.max(1, numZones - 1))));
-        return arr[idx];
-    }
-    mutado10() {
-        const nd = new DNA({ ...this });
-        const cont = ['crownHeight', 'crownWidth', 'trunkHeight', 'trunkWidth', 'spaceNeeded'];
-        const disc = ['crownShape', 'trunkType', 'crownColor', 'trunkColor'];
-        if (random() < 0.65) {
-            const k = random(cont);
-            const factor = 1 + random([-0.1, 0.1]); // ±10%
-            nd[k] = max(1, this[k] * factor);
-            if (k === 'crownWidth' || k === 'trunkHeight') {
-                nd.spaceNeeded = max(60, nd.crownWidth * 1.2, nd.trunkHeight * 0.9);
-            }
-        } else {
-            const k = random(disc);
-            if (k === 'crownShape') {
-                nd.crownShape = random(formas.filter(f => f !== this.crownShape));
-            } else if (k === 'trunkType') {
-                nd.trunkType = this.trunkType === 'linea' ? 'lineaRamas' : 'linea';
-            } else if (k === 'crownColor') {
-                nd.crownColor = random(paletaVerdes);
-            } else if (k === 'trunkColor') {
-                nd.trunkColor = random(paletaMarron);
-            }
-        }
-        return nd;
-    }
+
 }

@@ -1,52 +1,34 @@
+/*
+    tree.js
+    draw trees based on DNA
 
+    aqui no hi ha random, tot ve de DNA
+
+*/
 
 
 import { debugShowBoundingBox } from "./main.js";
 import { selectArrayElement } from "./util.js";
 import { zoneSystem } from "./main.js";
 
-/*=========================== TREE ===========================
-
-    Tree have a position and a DNA.
-
-    draw() draws the tree using its DNA properties.
-    hijoDNA() returns a mutated DNA for the child tree.
-
-*/
 const debugHideTrees = false;  // if true, hides all trees and draw only base
 
-let drawTreeBase = false;  // dibuixa una elipse sota l'arbre amb el color de la zona
+let drawZoneAtTreeBase = false;  // dibuixa una elipse sota l'arbre amb el color de la zona
 const treeBaseSizeX = 100;  // 50  - 200 to fill region
 const treeBaseSizeY = 50;  // 25  - 200 to fill region
 
-export function setDrawTreeBase(dtb=null) {
-    if (dtb === null) dtb = !drawTreeBase;
-    drawTreeBase = dtb;
+export function setDrawZoneAtTreeBase(dtb=null) {
+    if (dtb === null) dtb = !drawZoneAtTreeBase;
+    drawZoneAtTreeBase = dtb;
 }
 
 
-export class Tree {
+// dibuixa en world coordinates, cal fer applyCamera() abans
+export function drawTree(wx, wy, dna) {
 
-    constructor(wx, wy, dna) { 
-        // world coordinates
-        this.x = wx + dna.xoffset; 
-        this.y = wy + dna.yoffset; 
-        this.dna = dna;
-        this.zone = dna.zone;   // <-- per que ho guardo si ja ho tinc a dna.zone?
-        this.zoneNum = dna.zoneNum;
-        const c = this.zone.color;
-        const alpha = 200; // Ajusta de 0 a 255 según la transparencia deseada
-        this.zoneColor = color(red(c) * 0.7, green(c) * 0.7, blue(c) * 0.7, alpha);
-    }
-
-
-
-    // dibuixa en world coordinates, cal fer applyCamera() abans
-    draw() { 
-
-        const d = this.dna;
-        const x = this.x;
-        const y = this.y;
+        const d = dna;
+        const x = wx + dna.xoffset;
+        const y = wy + dna.yoffset;
 
         if (debugShowBoundingBox) {
             // punt referencia i bounding box
@@ -56,11 +38,11 @@ export class Tree {
         }
         
         // base
-        if (drawTreeBase){ 
+        if (drawZoneAtTreeBase){ 
             push();
-            fill(this.zoneColor);
+            fill(dna.zone.color);
             noStroke();
-            ellipse(this.x, this.y, treeBaseSizeX, treeBaseSizeY);
+            ellipse(x, y, treeBaseSizeX, treeBaseSizeY);
             pop();
         }
 
@@ -99,10 +81,7 @@ export class Tree {
                 console.log("Invalid crown shape ", d.crownShape);
 
         }
-    }
-
 }
-
 
 
 function _drawTrunkLinea(x, y, trunkHeight, trunkWidth, trunkColor) {
@@ -214,11 +193,10 @@ function _drawCrownWatercolor(x, y, trunkHeight, crownWidth, crownHeight, crownC
     push();
     noStroke();
     let base = color(crownColor);
-    let r = red(base), g = green(base), b = blue(base);
-    base = color(r, g, b, 128);
+    base.setAlpha(100);
     let temperatureAnchor = selectArrayElement([coldAnchor, warmAnchor, redAnchor, blueAnchor], dna.zoneNum, zoneSystem.config.zones.length);
-    let temperatureNumber = 0.2;  // <----------------------- ajustar de 0 a 1 random?
-    base = lerpColor(base, temperatureAnchor, temperatureNumber);
+    let temperatureFactor = 0.2;  // <----------------------- ajustar de 0 a 1 random?
+    base = lerpColor(base, temperatureAnchor, temperatureFactor);
     let crownColors = [
         lerpColor(base, color(0), 0.1),
         lerpColor(base, color(0), 0),
@@ -232,12 +210,12 @@ function _drawCrownWatercolor(x, y, trunkHeight, crownWidth, crownHeight, crownC
     ];
 
     for (let i = 0; i < 3; i++) {
-        fill(crownColors[i]);									// variacio color
+        fill(crownColors[i]);									    // variacio color
         ellipse(
-            x + crownOffsets[i].dx,								// desplaçat offset
-            y + trunkHeight + crownHeight/2 + crownOffsets[i].dy,				// a sobre el tronc i desplaçat offset
-            crownWidth, // <-- falta random						// variacio tamany corona
-            crownHeight // <-- falta random,
+            x + crownOffsets[i].dx,								    // desplaçat offset
+            y + trunkHeight + crownHeight/2 + crownOffsets[i].dy,	// a sobre el tronc i desplaçat offset
+            crownWidth,         
+            crownHeight 
         );
     }
     pop();

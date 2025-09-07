@@ -1,5 +1,5 @@
 const expect  = chai.expect;
-import { randomize, random, shuffle } from '../seedRandom.js';
+import { randomize, random, shuffle, randomFloat, randomInt } from '../seedRandom.js';
 
 describe('seedRandom.js', () => {
   describe('randomize', () => {
@@ -77,3 +77,48 @@ describe('seedRandom.js', () => {
     });
   });
   });
+
+
+  describe('seedRandom.js - randomInt and randomFloat', () => {
+  beforeEach(() => {
+    // Set a known seed before each test for deterministic results
+    randomize(42);
+  });
+
+  describe('randomInt', () => {
+    it('returns an integer within the specified range (inclusive)', () => {
+      for (let i = 0; i < 20; i++) {
+        const val = randomInt(10, 20);
+        expect(val).to.be.at.least(10);
+        expect(val).to.be.at.most(20);
+        expect(val % 1).to.equal(0);
+      }
+    });
+
+    it('returns the same sequence for the same seed', () => {
+      randomize(123);
+      const seq1 = [randomInt(1, 5), randomInt(1, 5), randomInt(1, 5)];
+      randomize(123);
+      const seq2 = [randomInt(1, 5), randomInt(1, 5), randomInt(1, 5)];
+      expect(seq1).to.deep.equal(seq2);
+    });
+  });
+
+  describe('randomFloat', () => {
+    it('returns a float within the specified range', () => {
+      for (let i = 0; i < 20; i++) {
+        const val = randomFloat(0, 1);
+        expect(val).to.be.at.least(0);
+        expect(val).to.be.below(1);
+      }
+    });
+
+    it('returns the same sequence for the same seed', () => {
+      randomize(456);
+      const seq1 = [randomFloat(0, 10), randomFloat(0, 10), randomFloat(0, 10)];
+      randomize(456);
+      const seq2 = [randomFloat(0, 10), randomFloat(0, 10), randomFloat(0, 10)];
+      expect(seq1).to.deep.equal(seq2);
+    });
+  });
+});

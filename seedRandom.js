@@ -39,10 +39,19 @@ function _seedRandom(seed=baseSeed) {
   };
 }
 
+// utils
+
 export function shuffle(array, seed=baseSeed) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+export function randomInt(min, max) {
+  return Math.floor(random() * (max - min + 1)) + min;
+}
+export function randomFloat(min, max) {
+  return random() * (max - min) + min;
 }

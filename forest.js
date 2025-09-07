@@ -6,12 +6,12 @@
 
 
 */
-import { Tree } from './tree.js';
-import { DNA } from './DNA.js';
+import { drawTree } from './tree.js';
+import { dnaFromPosition } from './DNA.js';
 import { worldToScreenX, worldToScreenY} from './camera.js';
 
 export class Forest {
-    constructor(treeDistance, treePosXVariation, initialForestSize = 1) {
+    constructor(treeDistance, treePosXVariation) {
         this.arboles = [];
         this.treeDistance = treeDistance;
         this.treePosXVariation = treePosXVariation;
@@ -21,7 +21,7 @@ export class Forest {
     // Dibuja una cuadrícula de árboles generando el DNA para cada posición visible
     // No fa servir els arbres guardats, nomes la posició
     drawGrid(xmin = -Infinity, xmax = Infinity, ymin = -Infinity, ymax = Infinity) {
-        //console.log(`Dibujando cuadrícula: (${xmin}, ${ymin}) a (${xmax}, ${ymax})`);
+        //console.log(`Grid: (${xmin}, ${ymin}) a (${xmax}, ${ymax})`);
         // Calcula los múltiplos de treeDistance que cubren la ventana
         const step = this.treeDistance;
         // Asegura que los límites sean múltiplos exactos de step
@@ -29,12 +29,16 @@ export class Forest {
         const endX   = Math.ceil(xmax / step) * step;
         const startY = Math.floor(ymin / step) * step;
         const endY   = Math.ceil(ymax / step) * step;
+        //console.log(`Grid snap (${startX}, ${startY}) a (${endX}, ${endY}) con paso ${step}`);
         for (let y = endY; y > startY; y -= step) {
             for (let x = startX; x <= endX; x += step) {
-                const dna = DNA.dnaPosition(x, y, this.treeDistance, this.treePosXVariation);
-                const tempTree = new Tree(x, y, dna);
-                //console.log('drawGrid: tree at', x, y, '-> screen:', worldToScreenX(x).toFixed(1), worldToScreenY(y).toFixed(1), ' with dna:', dna);
-                tempTree.draw();
+                const dna = dnaFromPosition(x, y, this.treeDistance, this.treePosXVariation);
+                drawTree(x, y, dna);
+                if (x === startX && y === endY) {
+                   // console.log("drawGrid corners: ", {x0: startX, y0: endY, x1: endX, y1: startY});
+                   // console.log("treeDistance, treePosXVariation: ", this.treeDistance, this.treePosXVariation);
+                   // console.log("First tree DNA: ", dna);
+                }
             }
         }
     }

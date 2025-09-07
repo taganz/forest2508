@@ -33,19 +33,19 @@ Ajustes rápidos
 // les primeres zones derivades s'assignen a posteriori en funcio dels filds 
 const zonesDefault = [
 	// derivades
-    { id: 'Taiga',      max: -1, color: '#3d6b4b' },
-    { id: 'Savanna',    max: -1, color: '#b2c85a' },
-    { id: 'High Mountain',  max: -1, color: '#cfc6c3' },
-    { id: 'Rainforest',     max: -1, color: '#0f6e3c' },
-    { id: 'Glacier',        max: -1, color: '#e8f8ff' },
+    { id: 'Taiga',      max: -1, color: '#3d6b4b', treeHeightFactor: 1.0, treeWidthFactor: 1.0   },
+    { id: 'Savanna',    max: -1, color: '#b2c85a', treeHeightFactor: 1.1, treeWidthFactor: 1.1 },
+    { id: 'High Mountain',  max: -1, color: '#cfc6c3', treeHeightFactor: 1.2, treeWidthFactor: 1.2 },
+    { id: 'Rainforest',     max: -1, color: '#0f6e3c', treeHeightFactor: 1.3, treeWidthFactor: 1.3 },
+    { id: 'Glacier',        max: -1, color: '#e8f8ff', treeHeightFactor: 1.4, treeWidthFactor: 1.4 },
 	// basiques
-    { id: 'Ocean',  max: 0.28, color: '#3a6ea5' },
-    { id: 'Coast',  max: 0.34, color: '#7fbbe3' },
-    { id: 'Meadow', max: 0.52, color: '#77c56b' },
-    { id: 'Forest', max: 0.68, color: '#2e8b57' },
-    { id: 'Jungle', max: 0.82, color: '#188c4f' },
-    { id: 'Mountain',   max: 0.92, color: '#8a7f7a' },
-    { id: 'Snow',       max: 1.01, color: '#f0f4f7' },
+    { id: 'Ocean',  max: 0.28, color: '#3a6ea5', treeHeightFactor: 1.0, treeWidthFactor: 1.0 },
+    { id: 'Coast',  max: 0.34, color: '#7fbbe3', treeHeightFactor: 1.1, treeWidthFactor: 1.1 },
+    { id: 'Meadow', max: 0.52, color: '#77c56b', treeHeightFactor: 1.2, treeWidthFactor: 1.2 },
+    { id: 'Forest', max: 0.68, color: '#2e8b57', treeHeightFactor: 1.3, treeWidthFactor: 1.3 },
+    { id: 'Jungle', max: 0.82, color: '#188c4f', treeHeightFactor: 1.4, treeWidthFactor: 1.4 },
+    { id: 'Mountain',   max: 0.92, color: '#8a7f7a', treeHeightFactor: 1.5, treeWidthFactor: 1.5 },
+    { id: 'Snow',       max: 1.01, color: '#f0f4f7', treeHeightFactor: 1.6, treeWidthFactor: 1.6 },
 ];
 
 

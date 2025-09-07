@@ -5,6 +5,7 @@ import { draw as p5draw, windowResized, setupCanvas, resetCanvas }            fr
 import { createZoneSystem } from './biomes.js';
 import { dnaFromPosition, initDNA } from './DNA.js';
 import { random, randomize } from './seedRandom.js';
+import { toggleAutomove } from './automove.js';
 
 // --- simulation parameters --------------------
 
@@ -55,6 +56,7 @@ function setup() {
    $('#btnApplySeed').onclick = () => { seedValue = parseInt($('#seed').value||0,10); reiniciar(); };
   $('#btnReset').onclick = () => reiniciar();
   $('#btnSave').onclick = () => saveCanvas('bosque_genetico','png');
+  $('#btnAuto').onclick = () => toggleAutomove();
 
   // atajos
   window.addEventListener('keydown', (e)=>{

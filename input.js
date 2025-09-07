@@ -3,6 +3,7 @@ import { zoomAt, pan } from './camera.js';
 import { toggleGrid } from "./rendering.js";
 import { setupMobileInput } from './inputMobile.js';
 import { setDrawZoneAtTreeBase } from "./tree.js";
+import { setAutomove } from "./automove.js";
 
 export const keysDown = {}
 const panStep = 5;
@@ -35,10 +36,10 @@ export function keyPressed() {
   if (key === "1") {    logCursorPosition();  }
   if (key === "2") {    setDrawZoneAtTreeBase();  }
   // arrow keys for pan
-  if (keyCode===LEFT_ARROW)  { pan(panStep,0); loop();  }   // loop en comptes de redraw per a permetre continuous pan
-  if (keyCode===RIGHT_ARROW) { pan(-panStep,0); loop(); }
-  if (keyCode===UP_ARROW)    { pan(0,panStep); loop();  }
-  if (keyCode===DOWN_ARROW)  { pan(0,-panStep); loop(); }
+  if (keyCode===LEFT_ARROW)  { setAutomove(false); pan(panStep,0); loop();  }   // loop en comptes de redraw per a permetre continuous pan
+  if (keyCode===RIGHT_ARROW) { setAutomove(false); pan(-panStep,0); loop(); }
+  if (keyCode===UP_ARROW)    { setAutomove(false); pan(0,panStep); loop();  }
+  if (keyCode===DOWN_ARROW)  { setAutomove(false); pan(0,-panStep); loop(); }
   if (key === 'g' || key === 'G') { toggleGrid(); redraw(); }
   //if(e.key==='s') { saveCanvas('bosque_genetico','png'); }
    //if(e.key==='r') { reiniciar(); }

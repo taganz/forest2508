@@ -8,10 +8,13 @@ let touchY = 0;
 // El segundo argumento (onMove) es opcional, si se pasa se llama además del pan
 export function setupMobileInput(canvas, onMove) {
   let lastTouch = null;
+  let isTouching = false;
   const panStep = 20;
   const threshold = 30; // píxeles mínimos para considerar un swipe
 
   canvas.addEventListener('touchstart', function(evt) {
+        isTouching = true;
+    evt.preventDefault();
     if (evt.touches && evt.touches.length > 0) {
       lastTouch = {
         x: evt.touches[0].clientX,
@@ -54,5 +57,11 @@ export function setupMobileInput(canvas, onMove) {
       if (window.loop) window.loop();
     }
   }, false);
+  
+  canvas.addEventListener('touchend', function (e) {
+    isTouching = false;
+    noLoop(); // Detiene el bucle de dibujo al terminar el toque
+    redraw(); // Opcional: fuerza un último repintado si lo necesitas
+  });
 }
 

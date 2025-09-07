@@ -3,7 +3,6 @@ import { setCameraParameters, getCameraParameters, applyCamera, screenToWorldX, 
 import { bosque, debugShowBoundingBox } from "./main.js";
 import { drawGridForForest, findTreeUnderMouse, drawTreeTooltip } from './util.js';
 import {handleContinuousPan} from "./input.js";
-
 let cnv;
 let frameRateVal = 12;
 export let showGrid = false; 
@@ -47,6 +46,8 @@ export function draw() {
   _showTooltipIfQPressed();
 
   handleContinuousPan();
+
+  //console.log(`draw frame ${frameCount} at ${nf(frameRate(),1,2)} fps`);
 
 }
 

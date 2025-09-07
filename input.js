@@ -60,12 +60,11 @@ export function keyReleased() {
   if (!keyIsDown(UP_ARROW)) {keysDown[UP_ARROW] = false};
   if (!keyIsDown(DOWN_ARROW)) {keysDown[DOWN_ARROW] = false};
 
-  let someKeyStillPressed = false;
-  [LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW].every(code => someKeyStillPressed = someKeyStillPressed  || keysDown[code]);
-  // --> OJO es desactiva el pan encara que hi hagi encara una tecla apretada
-  if (!someKeyStillPressed) {
-          noLoop(); 
-          redraw();
+ // Comprueba si alguna tecla de cursor sigue pulsada
+  const anyArrowStillPressed = [LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW].some(code => keysDown[code]);
+  if (!anyArrowStillPressed) {
+    noLoop();
+    redraw();
   }   // loop en comptes de redraw per a permetre continuous pan
 }
 
